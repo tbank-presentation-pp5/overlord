@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: overlord
+
+cloudflare:
+  id-account: ${CF_ID_ACCOUNT}
+  auth-token: ${CF_AUTH_TOKEN}
+  path-style-model: ${CF_PATH_STYLE_MODEL:@cf/mistralai/mistral-small-3.1-24b-instruct}
