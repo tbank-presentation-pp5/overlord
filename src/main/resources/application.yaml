@@ -1,6 +1,13 @@
 spring:
   application:
     name: overlord
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:overlord}
+    username: ${POSTGRES_USER:user}
+    password: ${POSTGRES_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 cloudflare:
   id-account: ${CF_ID_ACCOUNT}
