@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "template_slide_field")
+@Table(name = "template_slide_field",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"template_slide_id", "json_key"})
+)
 public class TemplateSlideField {
 
     @Id

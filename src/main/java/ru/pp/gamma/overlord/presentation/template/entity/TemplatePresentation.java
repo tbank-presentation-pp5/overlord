@@ -19,11 +19,6 @@ public class TemplatePresentation {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "template_presentation_slide",
-            joinColumns = @JoinColumn(name = "presentation_template_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "slide_template_id", nullable = false)
-    )
+    @OneToMany(mappedBy = "presentations")
     private List<TemplateSlide> slides;
 }
