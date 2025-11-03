@@ -9,7 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "template_slide")
+@Table(name = "template_slide",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"template_presentation_id", "type"})
+)
 public class TemplateSlide {
 
     @Id
@@ -26,8 +28,9 @@ public class TemplateSlide {
     @Column(name = "prompt", nullable = false)
     private String prompt;
 
-    @ManyToMany(mappedBy = "slides")
-    private List<TemplatePresentation> presentations;
+    @ManyToOne
+    @JoinColumn(name = "template_presentation_id", nullable = false)
+    private TemplatePresentation presentations;
 
     @OneToMany(mappedBy = "slide")
     private List<TemplateSlideField> fields;
