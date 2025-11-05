@@ -16,9 +16,8 @@ public class SlideField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "value", nullable = false)
     private String value;
-
-    private Integer order;
 
     @ManyToOne
     @JoinColumn(name = "image_id", nullable = false)

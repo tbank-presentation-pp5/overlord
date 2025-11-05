@@ -5,10 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "presentation_slide")
+@Table(name = "presentation_slide",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"order", "id"})
+)
 public class PresentationSlide {
 
     @Id
@@ -22,4 +26,10 @@ public class PresentationSlide {
     @ManyToOne
     @JoinColumn(name = "presentation_id", nullable = false)
     private Presentation presentation;
+
+    @OneToMany(mappedBy = "slide")
+    private List<SlideField> fields;
+
+    @Column(name = "order", nullable = false)
+    private Integer order;
 }

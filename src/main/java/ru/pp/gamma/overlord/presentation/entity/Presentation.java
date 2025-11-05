@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +34,7 @@ public class Presentation {
     @ManyToOne
     @JoinColumn(name = "template_presentation__id", nullable = false)
     private TemplatePresentation template;
+
+    @OneToMany(mappedBy = "presentation")
+    private List<PresentationSlide> slides;
 }
