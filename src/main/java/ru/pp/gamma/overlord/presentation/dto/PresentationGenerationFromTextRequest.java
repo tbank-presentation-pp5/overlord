@@ -1,4 +1,4 @@
 package ru.pp.gamma.overlord.presentation.dto;
 
-public record PresentationGenerationFromTextRequest(String text) {
+public record PresentationGenerationFromTextRequest(String note, long templatePresentationId) {
 }

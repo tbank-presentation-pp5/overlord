@@ -31,7 +31,7 @@ public class SystemPromptProvider {
     private final TemplatePresentationService templatePresentationService;
     private final ObjectMapper objectMapper;
 
-    public String getPrompt(int templatePresentationId) {
+    public String getPrompt(long templatePresentationId) {
         TemplatePresentation templatePresentation = templatePresentationService.getById(templatePresentationId);
 
         List<SystemPromptSlideModel> promptSlidesList = new ArrayList<>();

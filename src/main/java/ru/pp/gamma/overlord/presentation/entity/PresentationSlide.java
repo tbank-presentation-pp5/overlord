@@ -27,9 +27,9 @@ public class PresentationSlide {
     @JoinColumn(name = "presentation_id", nullable = false)
     private Presentation presentation;
 
-    @OneToMany(mappedBy = "slide")
+    @OneToMany(mappedBy = "slide", cascade = CascadeType.PERSIST)
     private List<SlideField> fields;
 
-    @Column(name = "order", nullable = false)
-    private Integer order;
+    @Column(name = "order_number", nullable = false)
+    private Integer orderNumber;
 }

@@ -20,7 +20,7 @@ public class SlideField {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "image_id", nullable = false)
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @ManyToOne
