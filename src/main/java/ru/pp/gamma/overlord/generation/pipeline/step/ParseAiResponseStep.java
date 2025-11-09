@@ -19,6 +19,7 @@ import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationSe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static ru.pp.gamma.overlord.presentation.template.common.KeyConsts.SLIDE_TYPE;
 
@@ -58,8 +59,9 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
         presentation.setTemplate(templatePresentation);
 
         List<PresentationSlide> slides = new ArrayList<>();
+        AtomicInteger order = new AtomicInteger();
         aiResponse.slides()
-                .forEach(fields -> slides.add(createSlide(presentation, templatePresentation, fields)));
+                .forEach(fields -> slides.add(createSlide(presentation, templatePresentation, fields, order.incrementAndGet())));
 
         presentation.setSlides(slides);
 
@@ -69,7 +71,8 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
     private PresentationSlide createSlide(
             Presentation presentation,
             TemplatePresentation templatePresentation,
-            JsonNode fields
+            JsonNode fields,
+            int order
     ) {
         SlideType slideType = SlideType.valueOf(fields.get(SLIDE_TYPE).asText());
         TemplateSlide templateSlide = templatePresentation.getSlides().stream()
@@ -80,6 +83,7 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
         PresentationSlide slide = new PresentationSlide();
         slide.setPresentation(presentation);
         slide.setTemplate(templateSlide);
+        slide.setOrderNumber(order);
 
         List<SlideField> slideFields = new ArrayList<>();
         templateSlide.getFields()

@@ -16,7 +16,7 @@ public class PresentationGenerationPipeline {
         this.steps = steps;
     }
 
-    public Presentation generate(int templatePresentationId, String userPrompt) {
+    public Presentation generate(long templatePresentationId, String userPrompt) {
         PresentationGenerationContext context = new PresentationGenerationContext();
         context.setTemplatePresentationId(templatePresentationId);
         context.setUserPrompt(userPrompt);

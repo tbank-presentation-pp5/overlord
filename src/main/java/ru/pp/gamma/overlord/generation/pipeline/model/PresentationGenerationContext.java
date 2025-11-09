@@ -9,6 +9,6 @@ import ru.pp.gamma.overlord.presentation.entity.Presentation;
 public class PresentationGenerationContext {
     private Presentation presentation;
     private AiPresentationResponse response;
-    private int templatePresentationId;
+    private long templatePresentationId;
     private String userPrompt;
 }

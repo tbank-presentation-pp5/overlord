@@ -35,6 +35,6 @@ public class Presentation {
     @JoinColumn(name = "template_presentation__id", nullable = false)
     private TemplatePresentation template;
 
-    @OneToMany(mappedBy = "presentation")
+    @OneToMany(mappedBy = "presentation", cascade = CascadeType.PERSIST)
     private List<PresentationSlide> slides;
 }
