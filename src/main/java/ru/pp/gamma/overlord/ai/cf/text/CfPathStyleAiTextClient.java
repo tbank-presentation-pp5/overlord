@@ -1,6 +1,5 @@
 package ru.pp.gamma.overlord.ai.cf.text;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -30,11 +29,6 @@ public class CfPathStyleAiTextClient implements AiTextClient {
     ) {
         this.client = client;
         this.cfProps = cfProps;
-    }
-
-    @PostConstruct
-    public void init() {
-        System.out.println();
     }
 
     @Override

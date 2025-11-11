@@ -11,4 +11,5 @@ public class CfProps {
     private String idAccount;
     private String authToken;
     private String pathStyleModel;
+    private String imageBase64Model;
 }
