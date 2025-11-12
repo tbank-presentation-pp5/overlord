@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import ru.pp.gamma.overlord.ai.api.AiImageClient;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
+import ru.pp.gamma.overlord.generation.pipeline.step.GenerateImagesStep;
 import ru.pp.gamma.overlord.generation.pipeline.step.ParseAiResponseStep;
 import ru.pp.gamma.overlord.generation.prompt.SystemPromptProvider;
+import ru.pp.gamma.overlord.image.service.ImageService;
 import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
 
 @Configuration
@@ -25,6 +28,18 @@ public class PresentationGenerationPipelineConfig {
                 aiTextClient,
                 objectMapper,
                 templatePresentationService
+        );
+    }
+
+    @Order(2)
+    @Bean
+    public GenerateImagesStep generateImagesStep(
+            AiImageClient aiImageClient,
+            ImageService imageService
+    ) {
+        return new GenerateImagesStep(
+                aiImageClient,
+                imageService
         );
     }
 

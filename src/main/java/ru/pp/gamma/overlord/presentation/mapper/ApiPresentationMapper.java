@@ -1,6 +1,9 @@
 package ru.pp.gamma.overlord.presentation.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.pp.gamma.overlord.image.dto.ImageResponse;
+import ru.pp.gamma.overlord.image.mapper.ImageMapper;
 import ru.pp.gamma.overlord.presentation.dto.PresentationResponse;
 import ru.pp.gamma.overlord.presentation.dto.PresentationSlideResponse;
 import ru.pp.gamma.overlord.presentation.dto.SlideContentResponse;
@@ -8,8 +11,11 @@ import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
 
+@RequiredArgsConstructor
 @Component
 public class ApiPresentationMapper {
+
+    private final ImageMapper imageMapper;
 
     public PresentationResponse toResponse(Presentation presentation) {
         return new PresentationResponse(
@@ -37,8 +43,17 @@ public class ApiPresentationMapper {
                 field.getId(),
                 field.getTemplate().getType(),
                 field.getTemplate().getJsonKey(),
-                field.getValue()
+                field.getValue(),
+                mapToImageIfNotNull(field)
         );
+    }
+
+    private ImageResponse mapToImageIfNotNull(SlideField field) {
+        if (field.getImage() == null) {
+            return null;
+        }
+
+        return imageMapper.toImageResponse(field.getImage());
     }
 
 }

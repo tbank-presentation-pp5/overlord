@@ -15,4 +15,11 @@ cloudflare:
   id-account: ${CF_ID_ACCOUNT}
   auth-token: ${CF_AUTH_TOKEN}
   path-style-model: ${CF_PATH_STYLE_MODEL:@cf/mistralai/mistral-small-3.1-24b-instruct}
-  image-base64-model: ${CF_IMAGE_BASE64_MODEL:@cf/leonardo/lucid-origin}
+  image-base64-model: ${CF_IMAGE_BASE64_MODEL:@cf/black-forest-labs/flux-1-schnell}
+
+minio:
+  user: ${MINIO_USER:minioadmin}
+  password: ${MINIO_PASSWORD:minioadmin123}
+  bucket: ${MINIO_BUCKET:images}
+  connect-url: ${MINIO_CONNECTION_URL:http://localhost:9000}
+  public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}

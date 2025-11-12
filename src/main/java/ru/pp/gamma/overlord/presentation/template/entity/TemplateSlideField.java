@@ -32,6 +32,10 @@ public class TemplateSlideField {
     @Column(name = "example", nullable = false)
     private String example;
 
+    @OneToOne
+    @JoinColumn(name = "template_image_id")
+    private TemplateImage templateImage;
+
     @ManyToOne
     @JoinColumn(name = "template_slide_id", nullable = false)
     private TemplateSlide slide;
