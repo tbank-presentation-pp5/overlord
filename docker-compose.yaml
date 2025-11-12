@@ -51,3 +51,35 @@ services:
         condition: service_started
     networks:
       - common
+
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DB=${POSTGRES_DB:-overlord}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+
+      - CF_ID_ACCOUNT=${CF_ID_ACCOUNT}
+      - CF_AUTH_TOKEN=${CF_AUTH_TOKEN}
+
+      - MINIO_USER=${MINIO_USER:-minioadmin}
+      - MINIO_PASSWORD=${MINIO_PASSWORD:-minioadmin123}
+      - MINIO_BUCKET=${MINIO_BUCKET:-images}
+      - MINIO_CONNECTION_URL=${MINIO_CONNECTION_URL:-http://minio:9000}
+      - MINIO_PUBLIC_URL=${MINIO_PUBLIC_URL:-http://localhost:9000}
+    ports:
+      - '8080:8080'
+    depends_on:
+      minio:
+        condition: service_started
+      minio-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_started
+    networks:
+      - common
