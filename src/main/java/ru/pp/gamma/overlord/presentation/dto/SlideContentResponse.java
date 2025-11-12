@@ -1,5 +1,6 @@
 package ru.pp.gamma.overlord.presentation.dto;
 
+import ru.pp.gamma.overlord.image.dto.ImageResponse;
 import ru.pp.gamma.overlord.presentation.template.entity.SlideFieldType;
 
 public record SlideContentResponse(
@@ -7,6 +8,7 @@ public record SlideContentResponse(
         Long fieldId,
         SlideFieldType type,
         String key,
-        String value
+        String value,
+        ImageResponse image
 ) {
 }

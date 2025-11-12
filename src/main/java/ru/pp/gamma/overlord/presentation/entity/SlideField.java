@@ -19,7 +19,7 @@ public class SlideField {
     @Column(name = "value", nullable = false)
     private String value;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "image_id")
     private Image image;
 
