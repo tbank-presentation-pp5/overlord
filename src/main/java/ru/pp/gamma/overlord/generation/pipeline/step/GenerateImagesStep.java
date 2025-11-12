@@ -8,6 +8,7 @@ import ru.pp.gamma.overlord.image.service.ImageService;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
 import ru.pp.gamma.overlord.presentation.template.entity.SlideFieldType;
+import ru.pp.gamma.overlord.presentation.template.entity.TemplateImage;
 
 import java.util.List;
 
@@ -33,7 +34,13 @@ public class GenerateImagesStep implements PresentationGenerationStep {
     }
 
     private void processField(SlideField field) {
-        byte[] imageBytes = aiImageClient.generate(SYSTEM_PROMPT, field.getValue(), 512, 512);
+        TemplateImage templateImage = field.getTemplate().getTemplateImage();
+        byte[] imageBytes = aiImageClient.generate(
+                SYSTEM_PROMPT,
+                field.getValue(),
+                templateImage.getHeight(),
+                templateImage.getWidth()
+        );
         String name = imageService.save(imageBytes);
 
         Image image = new Image();
