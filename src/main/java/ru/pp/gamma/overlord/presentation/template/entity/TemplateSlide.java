@@ -28,6 +28,9 @@ public class TemplateSlide {
     @Column(name = "prompt", nullable = false)
     private String prompt;
 
+    @Column(name = "layout_id", nullable = false)
+    private Integer layoutId;
+
     @ManyToOne
     @JoinColumn(name = "template_presentation_id", nullable = false)
     private TemplatePresentation presentations;

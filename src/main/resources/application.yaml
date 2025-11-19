@@ -21,5 +21,6 @@ minio:
   user: ${MINIO_USER:minioadmin}
   password: ${MINIO_PASSWORD:minioadmin123}
   bucket: ${MINIO_BUCKET:images}
+  util-bucket: ${MINIO_BUCKET_UTIL:util}
   connect-url: ${MINIO_CONNECTION_URL:http://localhost:9000}
   public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}

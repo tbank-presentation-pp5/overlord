@@ -1,4 +1,4 @@
-package ru.pp.gamma.overlord.image.config;
+package ru.pp.gamma.overlord.common.config;
 
 import io.minio.MinioClient;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -8,10 +8,10 @@ import ru.pp.gamma.overlord.image.props.MinioProps;
 
 @EnableConfigurationProperties(MinioProps.class)
 @Configuration
-public class CommonConfig {
+public class MinioConfig {
 
     @Bean
-    public MinioClient imagesMinioClient(MinioProps minioProps) {
+    public MinioClient minioClient(MinioProps minioProps) {
         return MinioClient.builder()
                 .credentials(minioProps.getUser(), minioProps.getPassword())
                 .endpoint(minioProps.getConnectUrl())

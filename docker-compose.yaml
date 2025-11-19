@@ -45,6 +45,7 @@ services:
       "sleep 2
       && mc alias set myminio http://minio:9000 minioadmin minioadmin123
       && mc mb myminio/images || true
+      && mc mb myminio/util || true
       && mc anonymous set download myminio/images"
     depends_on:
       minio:
@@ -70,6 +71,7 @@ services:
       - MINIO_USER=${MINIO_USER:-minioadmin}
       - MINIO_PASSWORD=${MINIO_PASSWORD:-minioadmin123}
       - MINIO_BUCKET=${MINIO_BUCKET:-images}
+      - MINIO_BUCKET_UTIL=${MINIO_BUCKET_UTIL:-util}
       - MINIO_CONNECTION_URL=${MINIO_CONNECTION_URL:-http://minio:9000}
       - MINIO_PUBLIC_URL=${MINIO_PUBLIC_URL:-http://localhost:9000}
     ports:
