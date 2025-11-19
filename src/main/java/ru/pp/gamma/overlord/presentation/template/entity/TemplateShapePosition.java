@@ -7,20 +7,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "template_image")
-public class TemplateImage {
+@Table(name = "template_shape_position")
+public class TemplateShapePosition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "x", nullable = false)
+    private Double x;
+
+    @Column(name = "y", nullable = false)
+    private Double y;
+
     @Column(name = "width", nullable = false)
-    private int width;
+    private Double width;
 
     @Column(name = "height", nullable = false)
-    private int height;
-
-    @OneToOne
-    @JoinColumn(name = "position_id", nullable = false)
-    private TemplateShapePosition position;
+    private Double height;
 }

@@ -12,6 +12,7 @@ public class MinioProps {
     private String user;
     private String password;
     private String bucket;
+    private String utilBucket;
     private String connectUrl;
     private String publicUrl;
 

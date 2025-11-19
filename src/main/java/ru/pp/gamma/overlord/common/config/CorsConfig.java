@@ -1,4 +1,4 @@
-package ru.pp.gamma.overlord.common;
+package ru.pp.gamma.overlord.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
