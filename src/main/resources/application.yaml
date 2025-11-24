@@ -11,6 +11,15 @@ spring:
   flyway:
     enabled: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  show-actuator: true
+
 cloudflare:
   id-account: ${CF_ID_ACCOUNT}
   auth-token: ${CF_AUTH_TOKEN}
