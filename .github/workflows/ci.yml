@@ -1,5 +1,9 @@
 name: static tests
 
+on:
+  push:
+  pull_request:
+
 jobs:
   lint:
     name: Code Quality Checks
