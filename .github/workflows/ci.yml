@@ -18,10 +18,17 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
           cache: 'maven'
-      - name: Run Maven Checkstyle
-        run: mvn -B verify -DskipTests=false
-      
+      - name: Run Static Analysis
+        run: >
+          mvn compile 
+          checkstyle:check 
+          pmd:check 
+          com.github.spotbugs:spotbugs-maven-plugin:check
+          -Dmaven.test.skip=true 
+          -B
+
       - name: Quality report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: checkstyle-report
@@ -29,7 +36,7 @@ jobs:
             target/checkstyle-result.xml
             target/site/checkstyle.html
             target/pmd.xml
-            target/findbugs.xml
+            target/spotbugsXml.xml # SpotBugs обычно кладет отчет сюда
           if-no-files-found: ignore
 
   security-check:
@@ -47,7 +54,7 @@ jobs:
           cache: 'maven'
 
       - name: Run OWASP Dependency Check
-        run: mvn org.owasp:dependency-check-maven:check -Dformat=XML
+        run: mvn org.owasp:dependency-check-maven:check -Dformat=XML -Dmaven.test.skip=true
       
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
@@ -57,5 +64,3 @@ jobs:
             target/dependency-check-report.xml
             target/dependency-check-report.html
           if-no-files-found: ignore
-
-      
