@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record CfTextRequestDto(
-        List<CfTextMessageElement> messages,
-
-        @JsonProperty("max_tokens")
-        int maxTokens,
-
-        boolean raw
-) {
-}
+        String model,
+        List<CfTextMessageElement> input,
+        CfReasoning reasoning,
+        @JsonProperty("max_tokens") int maxTokens,
+        @JsonProperty("max_output_tokens") int maxOutputTokens,
+        boolean stream
+) {}
