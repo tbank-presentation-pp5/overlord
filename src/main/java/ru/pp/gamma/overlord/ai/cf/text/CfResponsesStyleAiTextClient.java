@@ -4,19 +4,25 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
-import ru.pp.gamma.overlord.ai.cf.text.dto.*;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfContent;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfOutput;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfReasoning;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextRole;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextMessageElement;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextRequestDto;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextResponseDto;
 
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
+@Qualifier("responsesStyleAiTextClient")
 public class CfResponsesStyleAiTextClient implements AiTextClient {
 
     private static final String URL_TEMPLATE = "https://api.cloudflare.com/client/v4/accounts/%s/ai/v1/responses";
     private static final int MAX_TOKENS = 130964;
     private static final boolean STREAM = false;
-    private static final String GPT_OSS_120B_MODEL = "@cf/openai/gpt-oss-120b";
 
     private final RestClient client;
     private final CfProps cfProps;
@@ -84,7 +90,7 @@ public class CfResponsesStyleAiTextClient implements AiTextClient {
         CfReasoning reasoning = new CfReasoning("high", "detailed");
 
         return new CfTextRequestDto(
-                GPT_OSS_120B_MODEL,
+                cfProps.getResponsesStyleModel(),
                 List.of(systemMessage, userMessage),
                 reasoning,
                 MAX_TOKENS,

@@ -1,0 +1,2 @@
+ALTER TABLE slide_field
+    ALTER COLUMN value TYPE TEXT;
