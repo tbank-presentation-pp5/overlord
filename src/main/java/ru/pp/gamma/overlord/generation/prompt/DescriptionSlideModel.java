@@ -7,7 +7,7 @@ import ru.pp.gamma.overlord.presentation.template.entity.SlideType;
 
 @Getter
 @Setter
-public class SystemPromptSlideModel {
+public class DescriptionSlideModel {
     private SlideType slideType;
     private String description;
     private JsonNode fields;

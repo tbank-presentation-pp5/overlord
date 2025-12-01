@@ -39,8 +39,9 @@ public class PresentationExportController {
     }
 
 
-    private static String toLatin(String cyrillic){
+    private static String toLatin(String cyrillic) {
         Transliterator transliterator = Transliterator.getInstance("Russian-Latin/BGN");
-        return transliterator.transliterate(cyrillic).replace(" ", "_");
+        return transliterator.transliterate(cyrillic).replace(" ", "_")
+                .replace("ʹ", "");
     }
 }

@@ -16,7 +16,7 @@ public class SlideField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "value", nullable = false, columnDefinition = "TEXT")
     private String value;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
