@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.pp.gamma.overlord.generation.pipeline.model.GenerationParams;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
 import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
@@ -20,13 +21,15 @@ import static ru.pp.gamma.overlord.presentation.template.common.KeyConsts.SLIDE_
 public class SystemPromptProvider {
 
     private static final String TEMPLATE = """
-            Разбей следующий текст на слайды и верни результат строго в формате JSON. Ответ должен состоять только из одного валидного JSON-объекта. JSON должен быть полностью валидным и готовым к парсингу.
-            Каждый элемент массива — отдельный слайд. 
+            %s
+            
+            Ответ должен состоять только из одного валидного JSON-объекта. JSON должен быть полностью валидным и готовым к парсингу.
+            Каждый элемент массива — отдельный слайд.
             
             Требования:
             - запрещен любой текст до или после JSON
             - запрещено оборачивать JSON в ``` или другие символы
-            - максимум 10 слайдов
+            - слайдов должно быть РОВНО столько, сколько было указано ранее. (если не было указано, то игнорируй)
             - используй только типы слайдов, указанные ниже
             
             Формат вывода: { "name": "краткое название презы, о чем она (название будущего файла)", "slides": [ { "slideType": "...", ... }, ... ] }
@@ -37,8 +40,9 @@ public class SystemPromptProvider {
     private final TemplatePresentationService templatePresentationService;
     private final ObjectMapper objectMapper;
 
-    public String getPrompt(long templatePresentationId) {
-        TemplatePresentation templatePresentation = templatePresentationService.getById(templatePresentationId);
+    public String getPrompt(GenerationParams params) {
+        TemplatePresentation templatePresentation = templatePresentationService
+                .getById(params.templatePresentationId());
 
         List<SystemPromptSlideModel> promptSlidesList = new ArrayList<>();
 
@@ -47,7 +51,10 @@ public class SystemPromptProvider {
 
 
         try {
-            return TEMPLATE.formatted(objectMapper.writeValueAsString(promptSlidesList));
+            return TEMPLATE.formatted(
+                    params.userPrompt(),
+                    objectMapper.writeValueAsString(promptSlidesList)
+            );
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

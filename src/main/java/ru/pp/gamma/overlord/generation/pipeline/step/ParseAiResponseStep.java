@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
-import ru.pp.gamma.overlord.presentation.entity.Presentation;
-import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
-import ru.pp.gamma.overlord.presentation.entity.SlideField;
 import ru.pp.gamma.overlord.generation.pipeline.model.AiPresentationResponse;
 import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
 import ru.pp.gamma.overlord.generation.prompt.SystemPromptProvider;
+import ru.pp.gamma.overlord.presentation.entity.Presentation;
+import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
+import ru.pp.gamma.overlord.presentation.entity.SlideField;
 import ru.pp.gamma.overlord.presentation.template.entity.SlideType;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
@@ -35,15 +35,15 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
     public void process(PresentationGenerationContext context) {
         AiPresentationResponse aiResponse = getParsedResponse(context);
         TemplatePresentation templatePresentation = templatePresentationService
-                .getById(context.getTemplatePresentationId());
+                .getById(context.getParams().templatePresentationId());
 
         Presentation presentation = createFullPresentation(templatePresentation, aiResponse);
         context.setPresentation(presentation);
     }
 
     private AiPresentationResponse getParsedResponse(PresentationGenerationContext context) {
-        String systemPrompt = systemPromptProvider.getPrompt(context.getTemplatePresentationId());
-        String aiResponse = aiTextClient.generate(systemPrompt, context.getUserPrompt());
+        String systemPrompt = systemPromptProvider.getPrompt(context.getParams());
+        String aiResponse = aiTextClient.generate(systemPrompt, context.getParams().userPrompt());
 
         try {
             return objectMapper.readValue(aiResponse, AiPresentationResponse.class);

@@ -1,9 +1,10 @@
 package ru.pp.gamma.overlord.generation.pipeline;
 
 import org.springframework.stereotype.Component;
-import ru.pp.gamma.overlord.presentation.entity.Presentation;
+import ru.pp.gamma.overlord.generation.pipeline.model.GenerationParams;
 import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
 import ru.pp.gamma.overlord.generation.pipeline.step.PresentationGenerationStep;
+import ru.pp.gamma.overlord.presentation.entity.Presentation;
 
 import java.util.List;
 
@@ -16,11 +17,9 @@ public class PresentationGenerationPipeline {
         this.steps = steps;
     }
 
-    public Presentation generate(long templatePresentationId, String userPrompt) {
+    public Presentation generate(GenerationParams params) {
         PresentationGenerationContext context = new PresentationGenerationContext();
-        context.setTemplatePresentationId(templatePresentationId);
-        context.setUserPrompt(userPrompt);
-
+        context.setParams(params);
 
         for (PresentationGenerationStep step : steps) {
             step.process(context);
