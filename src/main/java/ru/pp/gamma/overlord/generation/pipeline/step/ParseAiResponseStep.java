@@ -5,17 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
+import ru.pp.gamma.overlord.generation.pipeline.model.AiPresentationResponse;
+import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
-import ru.pp.gamma.overlord.generation.pipeline.model.AiPresentationResponse;
-import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
-import ru.pp.gamma.overlord.generation.prompt.SystemPromptProvider;
 import ru.pp.gamma.overlord.presentation.template.entity.SlideType;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlideField;
-import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,24 +24,20 @@ import static ru.pp.gamma.overlord.presentation.template.common.KeyConsts.SLIDE_
 @RequiredArgsConstructor
 public class ParseAiResponseStep implements PresentationGenerationStep {
 
-    private final SystemPromptProvider systemPromptProvider;
     private final AiTextClient aiTextClient;
     private final ObjectMapper objectMapper;
-    private final TemplatePresentationService templatePresentationService;
 
     @Override
     public void process(PresentationGenerationContext context) {
         AiPresentationResponse aiResponse = getParsedResponse(context);
-        TemplatePresentation templatePresentation = templatePresentationService
-                .getById(context.getTemplatePresentationId());
+        TemplatePresentation templatePresentation = context.getTemplate();
 
         Presentation presentation = createFullPresentation(templatePresentation, aiResponse);
         context.setPresentation(presentation);
     }
 
     private AiPresentationResponse getParsedResponse(PresentationGenerationContext context) {
-        String systemPrompt = systemPromptProvider.getPrompt(context.getTemplatePresentationId());
-        String aiResponse = aiTextClient.generate(systemPrompt, context.getUserPrompt());
+        String aiResponse = aiTextClient.generate(context.getPrompt().systemPrompt(), context.getPrompt().userPrompt());
 
         try {
             return objectMapper.readValue(aiResponse, AiPresentationResponse.class);

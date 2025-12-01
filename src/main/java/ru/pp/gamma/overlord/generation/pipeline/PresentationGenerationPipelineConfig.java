@@ -8,9 +8,7 @@ import ru.pp.gamma.overlord.ai.api.AiImageClient;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
 import ru.pp.gamma.overlord.generation.pipeline.step.GenerateImagesStep;
 import ru.pp.gamma.overlord.generation.pipeline.step.ParseAiResponseStep;
-import ru.pp.gamma.overlord.generation.prompt.SystemPromptProvider;
 import ru.pp.gamma.overlord.image.service.ImageService;
-import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
 
 @Configuration
 public class PresentationGenerationPipelineConfig {
@@ -18,16 +16,12 @@ public class PresentationGenerationPipelineConfig {
     @Order(1)
     @Bean
     public ParseAiResponseStep parseAiResponseStep(
-            SystemPromptProvider systemPromptProvider,
             AiTextClient aiTextClient,
-            ObjectMapper objectMapper,
-            TemplatePresentationService templatePresentationService
+            ObjectMapper objectMapper
     ) {
         return new ParseAiResponseStep(
-                systemPromptProvider,
                 aiTextClient,
-                objectMapper,
-                templatePresentationService
+                objectMapper
         );
     }
 

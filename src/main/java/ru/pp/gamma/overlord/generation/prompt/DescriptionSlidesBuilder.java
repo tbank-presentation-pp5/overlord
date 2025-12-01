@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
-import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,38 +16,25 @@ import static ru.pp.gamma.overlord.presentation.template.common.KeyConsts.SLIDE_
 
 @RequiredArgsConstructor
 @Component
-public class SystemPromptProvider {
+public class DescriptionSlidesBuilder {
 
-    private static final String TEMPLATE = """
-            Разбей следующий текст на слайды и верни результат в формате JSON (Выведи JSON без обёртки). Используй только типы слайдов, описанные ниже.
-            Каждый элемент массива — отдельный слайд. Ограничение слайдов - 10
-            
-            Формат вывода: { "name": "краткое название презы, о чем она (название будущего файла)", "slides": [ { "slideType": "...", ... }, ... ] }
-            
-            Типы слайдов: %s
-            """;
-
-    private final TemplatePresentationService templatePresentationService;
     private final ObjectMapper objectMapper;
 
-    public String getPrompt(long templatePresentationId) {
-        TemplatePresentation templatePresentation = templatePresentationService.getById(templatePresentationId);
+    public String getDescription(TemplatePresentation template) {
+        List<DescriptionSlideModel> promptSlidesList = new ArrayList<>();
 
-        List<SystemPromptSlideModel> promptSlidesList = new ArrayList<>();
-
-        templatePresentation.getSlides()
+        template.getSlides()
                 .forEach(slideInfo -> promptSlidesList.add(buildPromptSlideModel(slideInfo)));
 
-
         try {
-            return TEMPLATE.formatted(objectMapper.writeValueAsString(promptSlidesList));
+            return objectMapper.writeValueAsString(promptSlidesList);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private SystemPromptSlideModel buildPromptSlideModel(TemplateSlide slide) {
-        SystemPromptSlideModel model = new SystemPromptSlideModel();
+    private DescriptionSlideModel buildPromptSlideModel(TemplateSlide slide) {
+        DescriptionSlideModel model = new DescriptionSlideModel();
         model.setSlideType(slide.getType());
         model.setDescription(slide.getPrompt());
 
@@ -69,5 +55,4 @@ public class SystemPromptProvider {
 
         return example;
     }
-
 }
