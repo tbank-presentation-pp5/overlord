@@ -8,4 +8,5 @@ public record CfTextResponseDto(
         List<CfOutput> output,
         String status,
         CfUsage usage
-) {}
+) {
+}

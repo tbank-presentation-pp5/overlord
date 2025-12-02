@@ -11,4 +11,5 @@ public record CfTextRequestDto(
         @JsonProperty("max_tokens") int maxTokens,
         @JsonProperty("max_output_tokens") int maxOutputTokens,
         boolean stream
-) {}
+) {
+}

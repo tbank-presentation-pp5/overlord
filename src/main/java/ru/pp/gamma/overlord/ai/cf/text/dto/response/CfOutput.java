@@ -9,4 +9,5 @@ public record CfOutput(
         List<CfContent> content,
         String status,
         CfTextRole role
-) {}
+) {
+}

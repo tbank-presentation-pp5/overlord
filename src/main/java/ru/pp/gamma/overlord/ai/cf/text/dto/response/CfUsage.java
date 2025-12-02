@@ -6,4 +6,5 @@ public record CfUsage(
         @JsonProperty("input_tokens") int inputTokens,
         @JsonProperty("output_tokens") int outputTokens,
         @JsonProperty("total_tokens") int totalTokens
-) {}
+) {
+}

@@ -6,9 +6,7 @@ import java.util.List;
 
 public record CfTextRequestDto(
         List<CfTextMessageElement> messages,
-
-        @JsonProperty("max_tokens")
-        int maxTokens,
-
+        @JsonProperty("max_tokens") int maxTokens,
         boolean raw
-) {}
+) {
+}
