@@ -14,7 +14,6 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
-@Qualifier("pathStyleAiTextClient")
 public class CfPathStyleAiTextClient implements AiTextClient {
 
     private static final String URL_TEMPLATE = "https://api.cloudflare.com/client/v4/accounts/%s/ai/run/%s";

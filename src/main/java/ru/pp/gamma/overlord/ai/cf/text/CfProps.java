@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class CfProps {
     private String idAccount;
     private String authToken;
+    private String apiTextStyle;
     private String pathStyleModel;
     private String responsesStyleModel;
     private String imageBase64Model;
