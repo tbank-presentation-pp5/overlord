@@ -6,7 +6,6 @@ public record CfTextResponseDto(
         String id,
         String model,
         List<CfOutput> output,
-        String status,
-        CfUsage usage
+        String status
 ) {
 }
