@@ -1,0 +1,21 @@
+image: docker:27-git
+
+services:
+  - name: docker:27-dind
+    command: ["--tls=false"]
+
+variables:
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+stages:
+  - build
+
+build_image:
+  stage: build
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
