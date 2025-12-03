@@ -3,7 +3,8 @@ package ru.pp.gamma.overlord.presentationplan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.pp.gamma.overlord.presentationplan.dto.GeneratePresentationPlanRequestDto;
-import ru.pp.gamma.overlord.presentationplan.dto.GeneratePresentationPlanResponseDto;
+import ru.pp.gamma.overlord.presentationplan.dto.PresentationPlanResponseDto;
+import ru.pp.gamma.overlord.presentationplan.dto.UpdatePresentationPlanRequestDto;
 import ru.pp.gamma.overlord.presentationplan.entity.PresentationPlan;
 import ru.pp.gamma.overlord.presentationplan.mapper.PresentationPlanMapper;
 import ru.pp.gamma.overlord.presentationplan.service.PresentationPlanService;
@@ -18,7 +19,7 @@ public class PresentationPlanController {
     private final PresentationPlanMapper presentationPlanMapper;
 
     @PostMapping("/generate")
-    public GeneratePresentationPlanResponseDto generate(@RequestBody GeneratePresentationPlanRequestDto request) {
+    public PresentationPlanResponseDto generate(@RequestBody GeneratePresentationPlanRequestDto request) {
         PresentationPlan plan = presentationPlanGenerationService
                 .generate(request.shortDescription(), request.numberOfSlides());
         presentationPlanService.save(plan);
@@ -26,8 +27,18 @@ public class PresentationPlanController {
     }
 
     @GetMapping("/{id}")
-    public GeneratePresentationPlanResponseDto getById(@PathVariable long id) {
+    public PresentationPlanResponseDto getById(@PathVariable long id) {
         PresentationPlan plan = presentationPlanService.getById(id);
+        return presentationPlanMapper.mapToDto(plan);
+    }
+
+    @PutMapping("/{id}")
+    public PresentationPlanResponseDto update(
+            @PathVariable long id,
+            @RequestBody UpdatePresentationPlanRequestDto request
+    ) {
+        PresentationPlan plan = presentationPlanService.getById(id);
+        presentationPlanService.update(plan, presentationPlanMapper.toListElements(request));
         return presentationPlanMapper.mapToDto(plan);
     }
 

@@ -2,10 +2,10 @@ package ru.pp.gamma.overlord.presentationplan.dto;
 
 import java.util.List;
 
-public record GeneratePresentationPlanResponseDto(
+public record PresentationPlanResponseDto(
         long id,
         String shortDescription,
         int numberOfSlides,
-        List<GenerationPresentationElementDto> plan
+        List<PresentationElementDto> plan
 ) {
 }

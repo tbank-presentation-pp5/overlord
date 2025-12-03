@@ -1,8 +1,10 @@
 package ru.pp.gamma.overlord.presentationplan.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class PresentationPlan {
     @Column(name = "slides_count", nullable = false)
     private Integer slidesCount;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "presentationPlan")
+    @Type(JsonType.class)
+    @Column(name = "elements", nullable = false, columnDefinition = "jsonb")
     private List<PresentationPlanElement> elements;
-
 }

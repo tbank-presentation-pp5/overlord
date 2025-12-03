@@ -40,12 +40,12 @@ public class UserPromptBuilder {
         plan.getElements().forEach(element -> {
             sb
                     .append("* ")
-                    .append(element.getTitle())
+                    .append(element.title())
                     .append("\n");
 
-            element.getItems()
-                    .forEach(item -> sb.append("  - ")
-                            .append(item.getText())
+            element.points()
+                    .forEach(point -> sb.append("  - ")
+                            .append(point)
                             .append("\n")
                     );
 
