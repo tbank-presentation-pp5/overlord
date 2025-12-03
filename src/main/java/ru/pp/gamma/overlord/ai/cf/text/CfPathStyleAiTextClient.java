@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
-import ru.pp.gamma.overlord.ai.cf.text.dto.CfTextMessageElement;
-import ru.pp.gamma.overlord.ai.cf.text.dto.CfTextRequestDto;
-import ru.pp.gamma.overlord.ai.cf.text.dto.CfTextResponseDto;
-import ru.pp.gamma.overlord.ai.cf.text.dto.CfTextRole;
+import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextMessageElement;
+import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextRequestDto;
+import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextResponseDto;
+import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextRole;
 
 import java.util.List;
 
