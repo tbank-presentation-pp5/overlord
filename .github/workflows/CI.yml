@@ -29,8 +29,8 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Maven build
-        run: mvn clean package -DskipTests=false
+      - name: Run Maven Build and Unit Tests
+        run: mvn clean verify -DskipITs=true 
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -68,35 +68,44 @@ jobs:
         run: |
           echo "Waiting for Postgres..."
           until docker exec $(docker compose ps -q postgres) pg_isready -U $POSTGRES_USER; do
+            echo "Postgres not ready yet, waiting..."
             sleep 2
           done
           echo "Postgres is ready!"
-          sleep 5 # MinIO init
-
+          echo "Waiting for MinIO init to complete..."
+          docker compose wait minio-init
+          echo "MinIO init is complete!"
+      
       - name: Run Integration Tests
-        run: mvn verify -Dskip.unit.tests=true
+        run: mvn verify -DskipTests=false 
 
       - name: Build App Image
         run: |
+          # Переносим скачанный JAR в нужное место, чтобы Dockerfile его увидел
+          mv target/*.jar target/app.jar 
           docker compose build app
-          docker compose up -d app
 
-      - name: smoke-tests
+      - name: Start Application Container
+        run: docker compose up -d app
+
+      - name: Smoke Test (Health Check)
         run: |
-          echo "Waiting for Spring Boot..."
+          echo "Waiting for Spring Boot to start..."
           timeout=60
-          url="http://localhost:8080/"
+          # Использование /actuator/health более надежно, чем '/'
+          url="http://localhost:8080/actuator/health" 
           while [ $timeout -gt 0 ]; do
+            # Используем статус 200, который возвращает Актуатор
             status_code=$(curl --write-out %{http_code} --silent --output /dev/null $url || echo "000")
             if [ "$status_code" -eq 200 ]; then
-              echo "Application is UP!"
+              echo "Application is UP and Healthy!"
               exit 0
             fi
-            echo "Waiting... ($timeout)"
+            echo "Waiting... ($timeout s left)"
             sleep 2
             ((timeout-=2))
           done
-          echo "App did not start"
+          echo "App did not start in 60 seconds."
           docker compose logs app
           exit 1
 
