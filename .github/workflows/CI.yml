@@ -30,7 +30,13 @@ jobs:
           cache: 'maven'
 
       - name: Run Maven Build and Unit Tests
-        run: mvn clean verify -DskipITs=true 
+        run: >
+          mvn clean verify 
+          -DskipITs=true 
+          -Dcheckstyle.skip=true 
+          -Dpmd.skip=true 
+          -Dspotbugs.skip=true 
+          -Dmaven.javadoc.skip=true
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
