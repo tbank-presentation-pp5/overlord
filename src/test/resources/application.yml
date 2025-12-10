@@ -1,16 +1,50 @@
+# src/test/resources/application.yml
 spring:
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: off
+
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
-    password:
-    
+    password: 
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     show-sql: false
-    
+    properties:
+      hibernate:
+        format_sql: false
+
   h2:
     console:
       enabled: false
+
+  # Отключаем всё, что может поднять отдельный management-порт или ломать тесты
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration
+      - org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration
+
+management:
+  server:
+    port: -1                      # ← КЛЮЧЕВАЯ СТРОКА — убивает все падения контекста
+  endpoints:
+    enabled-by-default: false     # отключаем все endpoints по умолчанию
+  endpoint:
+    health:
+      enabled: true               # только health нужен для @SpringBootTest
+      show-details: never
+
+server:
+  port: 0                         # рандомный порт в тестах — никаких конфликтов
+
+logging:
+  level:
+    root: WARN
+    ru.pp.gamma.overlord: INFO
+    org.springframework: WARN
+    org.hibernate.SQL: OFF
