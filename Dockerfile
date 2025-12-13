@@ -1,9 +1,10 @@
 FROM maven:3.9.11-eclipse-temurin-25-alpine AS build
 WORKDIR /app
+COPY checkstyle.xml .
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests -Dchecks.skipCheckstyle
 
 FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
