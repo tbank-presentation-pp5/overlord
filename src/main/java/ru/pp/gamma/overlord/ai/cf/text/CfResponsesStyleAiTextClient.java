@@ -3,14 +3,10 @@ package ru.pp.gamma.overlord.ai.cf.text;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import ru.pp.gamma.overlord.ai.account.CfAccountService;
+import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfContent;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfOutput;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfReasoning;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextRole;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextMessageElement;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextRequestDto;
-import ru.pp.gamma.overlord.ai.cf.text.dto.response.CfTextResponseDto;
+import ru.pp.gamma.overlord.ai.cf.text.dto.response.*;
 
 import java.util.List;
 
@@ -25,27 +21,32 @@ public class CfResponsesStyleAiTextClient implements AiTextClient {
 
     private final RestClient client;
     private final CfProps cfProps;
+    private final CfAccountService accountService;
 
     public CfResponsesStyleAiTextClient(
             @Qualifier("aiRestClient") RestClient client,
-            CfProps cfProps
+            CfProps cfProps,
+            CfAccountService accountService
     ) {
         this.client = client;
         this.cfProps = cfProps;
+        this.accountService = accountService;
     }
 
     @Override
     public String generate(String systemPrompt, String userPrompt) {
+        CfAccount account = accountService.getAccount();
+
         CfTextResponseDto response = client.post()
-                .uri(getUrl())
-                .header("Authorization", "Bearer " + cfProps.getAuthToken())
+                .uri(getUrl(account.accountId()))
+                .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
                 .body(getBody(systemPrompt, userPrompt))
                 .retrieve()
                 .body(CfTextResponseDto.class);
 
         if (response == null) {
-            throw new RuntimeException("Cloudflare AI API returned null response");
+            throw new RuntimeException("CF AI API returned null response");
         }
 
         return extractTextFromResponse(response);
@@ -53,7 +54,7 @@ public class CfResponsesStyleAiTextClient implements AiTextClient {
 
     private String extractTextFromResponse(CfTextResponseDto response) {
         if (response.output() == null || response.output().isEmpty()) {
-            throw new RuntimeException("No output in Cloudflare AI response");
+            throw new RuntimeException("No output in CF AI response");
         }
 
         for (CfOutput output : response.output()) {
@@ -76,8 +77,8 @@ public class CfResponsesStyleAiTextClient implements AiTextClient {
         throw new RuntimeException("No assistant message found in response output");
     }
 
-    private String getUrl() {
-        return URL_TEMPLATE.formatted(cfProps.getIdAccount());
+    private String getUrl(String accountId) {
+        return URL_TEMPLATE.formatted(accountId);
     }
 
     private CfTextRequestDto getBody(String systemPrompt, String userPrompt) {
