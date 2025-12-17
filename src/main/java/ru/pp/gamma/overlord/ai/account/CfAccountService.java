@@ -18,8 +18,7 @@ public class CfAccountService {
     public CfAccountService(AccountProviderClient accountProviderClient, CfProps cfProps) {
         this.accountProviderClient = accountProviderClient;
         this.cfProps = cfProps;
-        log.info("CfAccountService initialized. Fallback account: {}",
-                cfProps.getIdAccount() != null ? cfProps.getIdAccount().substring(0, Math.min(8, cfProps.getIdAccount().length())) + "..." : "null");
+        log.info("CfAccountService initialized. Fallback account: {}", cfProps.getIdAccount());
     }
 
     public CfAccount getAccount() {

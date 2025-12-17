@@ -31,8 +31,6 @@ cloudflare:
 accounter:
   url: ${ACCOUNTER_URL:http://localhost:8001}
   enabled: ${ACCOUNTER_ENABLED:false}
-  timeout-ms: ${ACCOUNTER_TIMEOUT_MS:5000}
-  max-retries: ${ACCOUNTER_MAX_RETRIES:3}
 
 minio:
   user: ${MINIO_USER:minioadmin}
