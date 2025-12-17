@@ -3,6 +3,8 @@ package ru.pp.gamma.overlord.ai.cf.image;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import ru.pp.gamma.overlord.ai.account.CfAccountService;
+import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
 import ru.pp.gamma.overlord.ai.api.AiImageClient;
 import ru.pp.gamma.overlord.ai.cf.image.dto.CfImageRequestDto;
 import ru.pp.gamma.overlord.ai.cf.image.dto.CfImageResultResponseDto;
@@ -19,20 +21,25 @@ public class CfBase64AiImageClient implements AiImageClient {
 
     private final RestClient client;
     private final CfProps cfProps;
+    private final CfAccountService accountService;
 
     public CfBase64AiImageClient(
             @Qualifier("aiRestClient") RestClient client,
-            CfProps cfProps
+            CfProps cfProps,
+            CfAccountService accountService
     ) {
         this.client = client;
         this.cfProps = cfProps;
+        this.accountService = accountService;
     }
 
     @Override
     public byte[] generate(String systemPrompt, String userPrompt, int height, int width) {
+        CfAccount account = accountService.getAccount();
+
         CfImageResultResponseDto response = client.post()
-                .uri(getUrl())
-                .header("Authorization", "Bearer " + cfProps.getAuthToken())
+                .uri(getUrl(account.accountId()))
+                .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
                 .body(getBody(systemPrompt, userPrompt, height, width))
                 .retrieve()
@@ -41,9 +48,9 @@ public class CfBase64AiImageClient implements AiImageClient {
         return Base64.getDecoder().decode(response.result().image());
     }
 
-    private String getUrl() {
+    private String getUrl(String accountId) {
         return URL_TEMPLATE.formatted(
-                cfProps.getIdAccount(),
+                accountId,
                 cfProps.getImageBase64Model()
         );
     }

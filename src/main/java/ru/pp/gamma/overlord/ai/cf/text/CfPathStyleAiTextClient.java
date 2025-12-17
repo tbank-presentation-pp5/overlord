@@ -3,6 +3,8 @@ package ru.pp.gamma.overlord.ai.cf.text;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import ru.pp.gamma.overlord.ai.account.CfAccountService;
+import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
 import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextMessageElement;
 import ru.pp.gamma.overlord.ai.cf.text.dto.path.CfTextRequestDto;
@@ -22,20 +24,25 @@ public class CfPathStyleAiTextClient implements AiTextClient {
 
     private final RestClient client;
     private final CfProps cfProps;
+    private final CfAccountService accountService;
 
     public CfPathStyleAiTextClient(
             @Qualifier("aiRestClient") RestClient client,
-            CfProps cfProps
+            CfProps cfProps,
+            CfAccountService accountService
     ) {
         this.client = client;
         this.cfProps = cfProps;
+        this.accountService = accountService;
     }
 
     @Override
     public String generate(String systemPrompt, String userPrompt) {
+        CfAccount account = accountService.getAccount();
+
         CfTextResponseDto response = client.post()
-                .uri(getUrl())
-                .header("Authorization", "Bearer " + cfProps.getAuthToken())
+                .uri(getUrl(account.accountId()))
+                .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
                 .body(getBody(systemPrompt, userPrompt))
                 .retrieve()
@@ -44,9 +51,9 @@ public class CfPathStyleAiTextClient implements AiTextClient {
         return response.result().response();
     }
 
-    private String getUrl() {
+    private String getUrl(String accountId) {
         return URL_TEMPLATE.formatted(
-                cfProps.getIdAccount(),
+                accountId,
                 cfProps.getPathStyleModel()
         );
     }

@@ -53,6 +53,24 @@ services:
     networks:
       - common
 
+  accounter:
+    image: ghcr.io/tbank-presentation-pp5/accounter:main
+    container_name: accounter
+    ports:
+      - "8001:8001"
+    environment:
+      - HOST=${HOST_IP_ACCOUNTER:-0.0.0.0}
+      - PORT=${PORT_ACCOUNTER:-8001}
+      - LOG_LEVEL=${LOG_LEVEL_ACCOUNTER:-INFO}
+      - TZ=UTC
+      - PYTHONUNBUFFERED=1
+      - DB_PATH=/data/auth.db
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    networks:
+      - common
+
   app:
     build:
       dockerfile: Dockerfile
@@ -68,6 +86,9 @@ services:
       - CF_ID_ACCOUNT=${CF_ID_ACCOUNT}
       - CF_AUTH_TOKEN=${CF_AUTH_TOKEN}
 
+      - ACCOUNTER_URL=${ACCOUNTER_URL:-http://accounter:8001}
+      - ACCOUNTER_ENABLED=${ACCOUNTER_ENABLED:-true}
+
       - MINIO_USER=${MINIO_USER:-minioadmin}
       - MINIO_PASSWORD=${MINIO_PASSWORD:-minioadmin123}
       - MINIO_BUCKET=${MINIO_BUCKET:-images}
@@ -82,6 +103,8 @@ services:
       minio-init:
         condition: service_completed_successfully
       postgres:
+        condition: service_started
+      accounter:
         condition: service_started
     networks:
       - common

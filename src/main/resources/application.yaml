@@ -28,6 +28,10 @@ cloudflare:
   responses-style-model: ${CF_RESPONSES_STYLE_MODEL:@cf/openai/gpt-oss-120b}
   image-base64-model: ${CF_IMAGE_BASE64_MODEL:@cf/black-forest-labs/flux-1-schnell}
 
+accounter:
+  url: ${ACCOUNTER_URL:http://localhost:8001}
+  enabled: ${ACCOUNTER_ENABLED:false}
+
 minio:
   user: ${MINIO_USER:minioadmin}
   password: ${MINIO_PASSWORD:minioadmin123}
