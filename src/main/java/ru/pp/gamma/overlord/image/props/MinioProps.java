@@ -14,6 +14,6 @@ public class MinioProps {
     private String bucket;
     private String utilBucket;
     private String connectUrl;
-    private String publicUrl;
+    private String publicDomain;
 
 }
