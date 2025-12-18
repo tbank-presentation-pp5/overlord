@@ -38,4 +38,4 @@ minio:
   bucket: ${MINIO_BUCKET:images}
   util-bucket: ${MINIO_BUCKET_UTIL:util}
   connect-url: ${MINIO_CONNECTION_URL:http://localhost:9000}
-  public-url: ${MINIO_PUBLIC_URL:http://localhost:9000}
+  public-domain: ${MINIO_PUBLIC_DOMAIN:localhost:9000}
