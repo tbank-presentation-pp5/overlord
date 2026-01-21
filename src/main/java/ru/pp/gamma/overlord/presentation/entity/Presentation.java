@@ -32,7 +32,7 @@ public class Presentation {
     private Instant updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "template_presentation__id", nullable = false)
+    @JoinColumn(name = "template_presentation_id", nullable = false)
     private TemplatePresentation template;
 
     @OneToMany(mappedBy = "presentation", cascade = CascadeType.PERSIST)

@@ -1,16 +1,17 @@
 package ru.pp.gamma.overlord.export.pptx;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.xslf.usermodel.XMLSlideShow;
-import org.apache.poi.xslf.usermodel.XSLFSlide;
-import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
+import org.apache.poi.xslf.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.pp.gamma.overlord.common.util.MinioRepository;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class PPTXExportService {
 
     private final MinioRepository minioRepository;
     private final PPTXSlideCreator pptxSlideCreator;
+    private final PPTXRenderHandler pptxRenderHandler;
 
     public byte[] export(Presentation presentation) {
         try (XMLSlideShow ppt = openTemplate()) {
@@ -34,15 +36,20 @@ public class PPTXExportService {
     }
 
     private byte[] processPresentation(Presentation presentation, XMLSlideShow ppt) {
-        cleanTemplate(ppt);
         presentation.getSlides().forEach(slide -> createSlide(slide, ppt));
+        cleanTemplate(ppt, presentation.getSlides().size());
         return pptToByte(ppt);
     }
 
     private void createSlide(PresentationSlide slide, XMLSlideShow ppt) {
-        XSLFSlideLayout layout = getSlideLayoutById(ppt, slide.getTemplate().getLayoutId());
-        XSLFSlide pptSlide = ppt.createSlide(layout);
-        pptxSlideCreator.fill(slide, pptSlide);
+//        XSLFSlideLayout layout = getSlideLayoutById(ppt, slide.getTemplate().getLayoutId());
+//        XSLFSlide pptSlide = ppt.createSlide(layout);
+        XSLFSlide templateSlide = ppt.getSlides().get(slide.getTemplate().getLayoutId() - 1);
+
+        XSLFSlide newSlide = ppt.createSlide(templateSlide.getSlideLayout()).importContent(templateSlide);
+
+        pptxRenderHandler.render(slide, newSlide);
+//        pptxSlideCreator.fill(slide, pptSlide);
     }
 
     private XMLSlideShow openTemplate() {
@@ -56,9 +63,8 @@ public class PPTXExportService {
         }
     }
 
-    private void cleanTemplate(XMLSlideShow ppt) {
-        int count = ppt.getSlides().size();
-        for (int i = 0; i < count; i++) {
+    private void cleanTemplate(XMLSlideShow ppt, int newSlidesCount) {
+        while (ppt.getSlides().size() > newSlidesCount) {
             ppt.removeSlide(0);
         }
     }

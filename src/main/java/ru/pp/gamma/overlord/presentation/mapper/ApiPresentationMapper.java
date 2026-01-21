@@ -41,8 +41,8 @@ public class ApiPresentationMapper {
         return new SlideContentResponse(
                 field.getTemplate().getId(),
                 field.getId(),
-                field.getTemplate().getType(),
-                field.getTemplate().getJsonKey(),
+                field.getTemplate().getContentType(),
+                field.getTemplate().getSchemaKey(),
                 field.getValue(),
                 mapToImageIfNotNull(field)
         );

@@ -13,7 +13,6 @@ import java.util.List;
 public class TemplatePresentation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
