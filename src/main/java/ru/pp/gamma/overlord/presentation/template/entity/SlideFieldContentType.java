@@ -1,6 +1,6 @@
 package ru.pp.gamma.overlord.presentation.template.entity;
 
-public enum SlideFieldType {
+public enum SlideFieldContentType {
     TEXT,
     IMAGE,
 }

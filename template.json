@@ -1,0 +1,77 @@
+{
+  "slides": [
+    {
+      "name": "Титульный",
+      "type": "TITLE",
+      "fields": [
+        {
+          "id": "title",
+          "name": "Заголовок",
+          "schemaKey": "title",
+          "shapeName": "рисунок 1",
+          "contentType": "TEXT",
+          "description": "Заголовок презентации",
+          "example": "Как искусственный интеллект меняет образование"
+        }
+      ],
+      "layoutId": 1,
+      "description": "Титульный слайд презентации. На нем расположена тема презентации"
+    },
+    {
+      "name": "Секционный слайд",
+      "type": "SECTION_TITLE",
+      "fields": [
+        {
+          "id": "section_title",
+          "name": "Название раздела",
+          "schemaKey": "section_title",
+          "shapeName": "текст 1",
+          "contentType": "TEXT",
+          "description": "Название раздела",
+          "example": "Искусственный интеллект в университетах"
+        }
+      ],
+      "layoutId": 2,
+      "description": "Секционный слайд для разбиения тем. Содержит тему раздела."
+    },
+    {
+      "name": "Изображение + текст",
+      "type": "TEXT_WITH_IMAGE",
+      "fields": [
+        {
+          "id": "title",
+          "name": "Заголовок",
+          "schemaKey": "title",
+          "shapeName": "текст 1",
+          "contentType": "TEXT",
+          "description": "Заголовок слайда",
+          "example": "Рост использования ИИ в образовании"
+        },
+        {
+          "id": "text",
+          "name": "Текст слайда",
+          "schemaKey": "text",
+          "shapeName": "текст 2",
+          "contentType": "TEXT",
+          "description": "Текст слайда. 2 - 4 предложения.",
+          "example": "Технологии машинного обучения активно внедряются в образовательные платформы, помогая адаптировать курсы под каждого студента."
+        },
+        {
+          "id": "image",
+          "name": "Изображение",
+          "schemaKey": "image",
+          "shapeName": "рисунок 1",
+          "contentType": "IMAGE",
+          "description": "Промпт на английском языке для генерации изображения в дополнение к содержанию слайда",
+          "example": "modern classroom with students using laptops, teacher explaining AI concepts, futuristic lighting, realistic style",
+          "imageSize": {
+            "width": 704,
+            "height": 528
+          }
+        }
+      ],
+      "layoutId": 3,
+      "description": "Слайд, содержащий текст и изображение к нему"
+    }
+  ]
+}

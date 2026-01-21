@@ -1,8 +1,11 @@
 package ru.pp.gamma.overlord.presentation.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import ru.pp.gamma.overlord.image.entity.Image;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlideField;
 
@@ -16,8 +19,9 @@ public class SlideField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "value", nullable = false, columnDefinition = "TEXT")
-    private String value;
+    @Type(JsonType.class)
+    @Column(name = "value", nullable = false, columnDefinition = "jsonb")
+    private JsonNode value;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "image_id")

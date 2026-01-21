@@ -85,7 +85,7 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
                         slideFields.add(createSlideField(
                                         slide,
                                         templateField,
-                                        fields.get(templateField.getJsonKey()).asText()
+                                        fields.get(templateField.getSchemaKey())
                                 )
                         )
                 );
@@ -98,7 +98,7 @@ public class ParseAiResponseStep implements PresentationGenerationStep {
     private SlideField createSlideField(
             PresentationSlide presentationSlide,
             TemplateSlideField templateSlideField,
-            String value
+            JsonNode value
     ) {
         SlideField slideField = new SlideField();
         slideField.setTemplate(templateSlideField);

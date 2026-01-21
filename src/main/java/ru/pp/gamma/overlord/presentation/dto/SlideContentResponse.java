@@ -1,14 +1,15 @@
 package ru.pp.gamma.overlord.presentation.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import ru.pp.gamma.overlord.image.dto.ImageResponse;
-import ru.pp.gamma.overlord.presentation.template.entity.SlideFieldType;
+import ru.pp.gamma.overlord.presentation.template.entity.SlideFieldContentType;
 
 public record SlideContentResponse(
         Long templateFieldId,
         Long fieldId,
-        SlideFieldType type,
+        SlideFieldContentType type,
         String key,
-        String value,
+        JsonNode value,
         ImageResponse image
 ) {
 }

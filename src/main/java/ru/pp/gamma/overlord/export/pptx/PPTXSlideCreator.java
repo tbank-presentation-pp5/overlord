@@ -1,5 +1,6 @@
 package ru.pp.gamma.overlord.export.pptx;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.sl.usermodel.PictureData;
 import org.apache.poi.xslf.usermodel.*;
@@ -10,10 +11,12 @@ import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
 import ru.pp.gamma.overlord.presentation.template.entity.FontColor;
 import ru.pp.gamma.overlord.presentation.template.entity.FontStyle;
-import ru.pp.gamma.overlord.presentation.template.entity.TemplateText;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+
+import static ru.pp.gamma.overlord.presentation.template.entity.SlideFieldContentType.IMAGE;
+import static ru.pp.gamma.overlord.presentation.template.entity.SlideFieldContentType.TEXT;
 
 @RequiredArgsConstructor
 @Component
@@ -30,7 +33,7 @@ public class PPTXSlideCreator {
     }
 
     private void createField(SlideField field, XSLFSlide pptSlide) {
-        switch (field.getTemplate().getType()) {
+        switch (field.getTemplate().getContentType()) {
             case TEXT -> processTextType(field, pptSlide);
             case IMAGE -> processImageField(field, pptSlide);
         }
@@ -41,22 +44,22 @@ public class PPTXSlideCreator {
         XSLFTextParagraph p = shape.getTextParagraphs().getFirst();
         XSLFTextRun r = p.addNewTextRun();
 
-        TemplateText templateText = field.getTemplate().getTemplateText();
+        JsonNode templateText = field.getTemplate().getMeta();
 
-        r.setText(field.getValue());
-        r.setFontFamily(templateText.getFontFamily());
-        r.setFontSize(templateText.getFontSize());
-        setFontStyle(r, templateText.getFontStyle());
-        setColor(r, templateText.getColor());
+        r.setText(field.getValue().get("text").asText());
+//        r.setFontFamily(templateText.getFontFamily());
+//        r.setFontSize(templateText.getFontSize());
+//        setFontStyle(r, templateText.getFontStyle());
+//        setColor(r, templateText.getColor());
 
         r.getRPr(true).setLang("ru-RU");
 
-        shape.setAnchor(new Rectangle2D.Double(
-                templateText.getPosition().getX(),
-                templateText.getPosition().getY(),
-                templateText.getPosition().getWidth(),
-                templateText.getPosition().getHeight()
-        ));
+//        shape.setAnchor(new Rectangle2D.Double(
+//                templateText.getPosition().getX(),
+//                templateText.getPosition().getY(),
+//                templateText.getPosition().getWidth(),
+//                templateText.getPosition().getHeight()
+//        ));
     }
 
     private void processImageField(SlideField field, XSLFSlide pptSlide) {
@@ -66,12 +69,12 @@ public class PPTXSlideCreator {
         XSLFPictureData pd = pptSlide.getSlideShow().addPicture(imageData, PictureData.PictureType.JPEG);
         XSLFPictureShape shape = pptSlide.createPicture(pd);
 
-        shape.setAnchor(new Rectangle2D.Double(
-                field.getTemplate().getTemplateImage().getPosition().getX(),
-                field.getTemplate().getTemplateImage().getPosition().getY(),
-                field.getTemplate().getTemplateImage().getPosition().getWidth(),
-                field.getTemplate().getTemplateImage().getPosition().getHeight()
-        ));
+//        shape.setAnchor(new Rectangle2D.Double(
+//                field.getTemplate().getTemplateImage().getPosition().getX(),
+//                field.getTemplate().getTemplateImage().getPosition().getY(),
+//                field.getTemplate().getTemplateImage().getPosition().getWidth(),
+//                field.getTemplate().getTemplateImage().getPosition().getHeight()
+//        ));
     }
 
     private void setFontStyle(XSLFTextRun r, FontStyle style) {

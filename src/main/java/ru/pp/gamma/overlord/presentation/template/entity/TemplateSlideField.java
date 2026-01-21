@@ -1,8 +1,11 @@
 package ru.pp.gamma.overlord.presentation.template.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -17,28 +20,28 @@ public class TemplateSlideField {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private SlideFieldType type;
+    @Column(name = "content_type", nullable = false)
+    private SlideFieldContentType contentType;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "json_key", nullable = false)
-    private String jsonKey;
+    @Column(name = "schema_key", nullable = false)
+    private String schemaKey;
 
-    @Column(name = "prompt", nullable = false)
-    private String prompt;
+    @Column(name = "description", nullable = false)
+    private String description;
 
-    @Column(name = "example", nullable = false)
-    private String example;
+    @Type(JsonType.class)
+    @Column(name = "example", nullable = false, columnDefinition = "jsonb")
+    private JsonNode example;
 
-    @OneToOne
-    @JoinColumn(name = "template_image_id")
-    private TemplateImage templateImage;
+    @Type(JsonType.class)
+    @Column(name = "meta", nullable = false, columnDefinition = "jsonb")
+    private JsonNode meta;
 
-    @OneToOne
-    @JoinColumn(name = "template_text_id")
-    private TemplateText templateText;
+    @Column(name = "shape_name", nullable = false)
+    private String shapeName;
 
     @ManyToOne
     @JoinColumn(name = "template_slide_id", nullable = false)
