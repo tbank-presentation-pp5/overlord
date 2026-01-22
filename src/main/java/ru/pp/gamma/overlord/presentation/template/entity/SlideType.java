@@ -5,4 +5,5 @@ public enum SlideType {
     SECTION,
     TEXT_WITH_IMAGE,
     PROS_AND_CONS,
+    IMAGE_GRID_5,
 }

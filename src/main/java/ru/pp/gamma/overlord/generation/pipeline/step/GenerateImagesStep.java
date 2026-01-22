@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenerateImagesStep implements PresentationGenerationStep {
 
-    private static final String SYSTEM_PROMPT = "High-quality digital art, concept art style, detailed, vibrant colors, cinematic lighting, sharp focus, clean lines, not a photo, hand-drawn look";
+    private static final String SYSTEM_PROMPT = "High-quality digital art, concept art style, detailed, vibrant colors, cinematic lighting, sharp focus, clean lines, not a photo, hand-drawn look, edge-to-edge, full bleed, absolutely no borders, no frames, no black bars, no letterbox, do not generate any black margins";
 
     private final AiImageClient aiImageClient;
     private final ImageService imageService;
