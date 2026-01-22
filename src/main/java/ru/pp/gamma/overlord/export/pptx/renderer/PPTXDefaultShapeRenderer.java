@@ -3,13 +3,12 @@ package ru.pp.gamma.overlord.export.pptx.renderer;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.sl.usermodel.PictureData;
 import org.apache.poi.xslf.usermodel.*;
+import org.openxmlformats.schemas.presentationml.x2006.main.impl.CTPictureImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.pp.gamma.overlord.common.util.MinioRepository;
 import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
-
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @Component
@@ -57,28 +56,18 @@ public class PPTXDefaultShapeRenderer implements PPTXRenderer {
         byte[] imageData = minioRepository.get(imagesBucket, field.getImage().getName())
                 .orElseThrow(() -> new RuntimeException("image not found"));
 
-        XSLFPictureData newPictureData = pptSlide.getSlideShow().addPicture(imageData, PictureData.PictureType.JPEG);
-        XSLFPictureShape newImage = pptSlide.createPicture(newPictureData);
-        copyImageProperties(imageShape, newImage);
 
-        try {
-            imageShape.getPictureData()
-                    .setData(imageData);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        // Создаем новый PictureData для каждого изображения
+        XSLFPictureData newPictureData = pptSlide.getSlideShow().addPicture(imageData, PictureData.PictureType.JPEG);
+
+        // Получаем новый relation ID для этого слайда
+        String relId = pptSlide.addRelation(null, XSLFRelation.IMAGES, newPictureData).getRelationship().getId();
+
+        // Обновляем ссылку на изображение в XML, сохраняя все остальные свойства
+        CTPictureImpl xmlPicture = (CTPictureImpl) imageShape.getXmlObject();
+        if (xmlPicture.getBlipFill() != null && xmlPicture.getBlipFill().getBlip() != null) {
+            xmlPicture.getBlipFill().getBlip().setEmbed(relId);
         }
 
-        pptSlide.removeShape(imageShape);
     }
-
-    private void copyImageProperties(XSLFPictureShape source, XSLFPictureShape target) {
-        target.setAnchor(source.getAnchor());
-        target.setRotation(source.getRotation());
-        target.setFlipHorizontal(source.getFlipHorizontal());
-        target.setFlipVertical(source.getFlipVertical());
-        target.setLineColor(source.getLineColor());
-        target.setLineWidth(source.getLineWidth());
-        target.setLineDash(source.getLineDash());
-    }
-
 }
