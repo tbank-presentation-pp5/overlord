@@ -36,11 +36,11 @@ public class DescriptionSlidesBuilder {
     private DescriptionSlideModel buildPromptSlideModel(TemplateSlide slide) {
         DescriptionSlideModel model = new DescriptionSlideModel();
         model.setSlideType(slide.getType());
-        model.setDescription(slide.getPrompt());
+        model.setDescription(slide.getDescription());
 
         ObjectNode fields = objectMapper.createObjectNode();
         slide.getFields()
-                .forEach(fieldInfo -> fields.put(fieldInfo.getJsonKey(), fieldInfo.getPrompt()));
+                .forEach(fieldInfo -> fields.put(fieldInfo.getSchemaKey(), fieldInfo.getDescription()));
 
         model.setFields(fields);
         model.setExample(buildExample(slide));
@@ -51,7 +51,7 @@ public class DescriptionSlidesBuilder {
         ObjectNode example = objectMapper.createObjectNode();
         example.put(SLIDE_TYPE, slide.getType().name());
 
-        slide.getFields().forEach(fieldInfo -> example.put(fieldInfo.getJsonKey(), fieldInfo.getExample()));
+        slide.getFields().forEach(fieldInfo -> example.put(fieldInfo.getSchemaKey(), fieldInfo.getExample()));
 
         return example;
     }

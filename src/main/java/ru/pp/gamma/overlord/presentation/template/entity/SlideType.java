@@ -4,4 +4,5 @@ public enum SlideType {
     MAIN,
     SECTION,
     TEXT_WITH_IMAGE,
+    PROS_AND_CONS,
 }

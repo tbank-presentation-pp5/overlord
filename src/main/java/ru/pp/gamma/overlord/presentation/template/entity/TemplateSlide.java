@@ -15,7 +15,6 @@ import java.util.List;
 public class TemplateSlide {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -25,8 +24,8 @@ public class TemplateSlide {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "prompt", nullable = false)
-    private String prompt;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "layout_id", nullable = false)
     private Integer layoutId;
