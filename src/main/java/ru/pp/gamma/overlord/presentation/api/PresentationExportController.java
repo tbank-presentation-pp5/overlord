@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.pp.gamma.overlord.export.pdf.PDFExportService;
 import ru.pp.gamma.overlord.export.pptx.PPTXExportService;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.repository.PresentationRepository;
@@ -23,6 +24,7 @@ public class PresentationExportController {
 
     private final PresentationRepository presentationRepository;
     private final PPTXExportService pptxExportService;
+    private final PDFExportService pdfExportService;
 
     @GetMapping(value = "/pptx/download")
     public ResponseEntity<byte[]> exportPPTX(@PathVariable long id) {
@@ -36,6 +38,20 @@ public class PresentationExportController {
                 .contentType(MediaType.parseMediaType(PPTX_MEDIA_TYPE))
                 .body(exportResult);
 
+    }
+
+    @GetMapping(value = "/pdf/download")
+    public ResponseEntity<byte[]> exportPDF(@PathVariable long id) {
+        Presentation presentation = presentationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Presentation not found"));
+        byte[] exportResult = pdfExportService.export(presentation);
+
+        String filename = toLatin(presentation.getName()) + ".pptx";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(exportResult);
     }
 
 
