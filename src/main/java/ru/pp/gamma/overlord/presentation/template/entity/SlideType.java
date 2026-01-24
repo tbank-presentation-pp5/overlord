@@ -6,4 +6,5 @@ public enum SlideType {
     TEXT_WITH_IMAGE,
     PROS_AND_CONS,
     IMAGE_GRID_5,
+    TEXT_WITH_PIE_CHART,
 }
