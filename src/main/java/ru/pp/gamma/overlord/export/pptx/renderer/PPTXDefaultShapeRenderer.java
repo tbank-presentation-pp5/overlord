@@ -2,13 +2,18 @@ package ru.pp.gamma.overlord.export.pptx.renderer;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.sl.usermodel.PictureData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFPieChartData;
 import org.apache.poi.xslf.usermodel.*;
 import org.openxmlformats.schemas.presentationml.x2006.main.impl.CTPictureImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.pp.gamma.overlord.common.util.MinioRepository;
+import ru.pp.gamma.overlord.export.pptx.chart.PPTXChartPieCreator;
 import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -18,6 +23,7 @@ public class PPTXDefaultShapeRenderer implements PPTXRenderer {
     private String imagesBucket;
 
     private final MinioRepository minioRepository;
+    private final PPTXChartPieCreator pptxChartPieCreator;
 
     @Override
     public boolean canRender(PresentationSlide slide) {
@@ -33,11 +39,12 @@ public class PPTXDefaultShapeRenderer implements PPTXRenderer {
         XSLFShape shape = pptSlide.getShapes().stream()
                 .filter(shapeElement -> shapeElement.getShapeName().equals(field.getTemplate().getShapeName()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Shape not found!"));
+                .orElseThrow(() -> new RuntimeException("Shape not found: " + field.getTemplate().getShapeName()));
 
         switch (field.getTemplate().getContentType()) {
             case TEXT -> renderText(field, shape);
             case IMAGE -> renderImage(field, shape, pptSlide);
+            case CHART -> renderChart(field, shape);
         }
     }
 
@@ -69,5 +76,16 @@ public class PPTXDefaultShapeRenderer implements PPTXRenderer {
             xmlPicture.getBlipFill().getBlip().setEmbed(relId);
         }
 
+    }
+
+    private void renderChart(SlideField field, XSLFShape shape) {
+        XSLFGraphicFrame frame = (XSLFGraphicFrame) shape;
+        XSLFChart chart = frame.getChart();
+        List<XDDFChartData> chartSeries = chart.getChartSeries();
+
+        XDDFChartData chartData = chartSeries.getFirst();
+        if (chartData instanceof XDDFPieChartData) {
+            pptxChartPieCreator.create(field, chart);
+        }
     }
 }
