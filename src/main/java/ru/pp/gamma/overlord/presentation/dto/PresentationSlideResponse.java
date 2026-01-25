@@ -9,6 +9,7 @@ public record PresentationSlideResponse(
         Long templateSlideId,
         SlideType type,
         Integer orderNumber,
+        Boolean isNeedPageNumber,
         List<SlideContentResponse> content
 ) {
 }
