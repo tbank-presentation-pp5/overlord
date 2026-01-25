@@ -33,6 +33,7 @@ public class ApiPresentationMapper {
                 slide.getTemplate().getId(),
                 slide.getTemplate().getType(),
                 slide.getOrderNumber(),
+                slide.getTemplate().isNeedPageNumber(),
                 slide.getFields().stream().map(this::toResponse).toList()
         );
     }

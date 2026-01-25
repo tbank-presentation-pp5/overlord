@@ -30,6 +30,9 @@ public class TemplateSlide {
     @Column(name = "layout_id", nullable = false)
     private Integer layoutId;
 
+    @Column(name = "is_need_page_number", nullable = false)
+    private boolean isNeedPageNumber;
+
     @ManyToOne
     @JoinColumn(name = "template_presentation_id", nullable = false)
     private TemplatePresentation presentations;

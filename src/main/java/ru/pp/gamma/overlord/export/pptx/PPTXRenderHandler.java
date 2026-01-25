@@ -17,10 +17,13 @@ public class PPTXRenderHandler {
     }
 
     public void render(PresentationSlide slide, XSLFSlide pptSlide) {
-        renderers.stream()
+        List<PPTXRenderer> matched = renderers.stream()
                 .filter(r -> r.canRender(slide))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Renderer not found"))
-                .render(slide, pptSlide);
+                .toList();
+
+        if (matched.isEmpty()) {
+            throw new RuntimeException("Renderer not found");
+        }
+        matched.forEach(r -> r.render(slide, pptSlide));
     }
 }
