@@ -55,7 +55,7 @@ CREATE TABLE template_slide
     id                       BIGINT       NOT NULL,
     type                     VARCHAR(255) NOT NULL,
     name                     VARCHAR(255) NOT NULL,
-    description              VARCHAR(255) NOT NULL,
+    description              TEXT NOT NULL,
     layout_id                INTEGER      NOT NULL,
     template_presentation_id BIGINT       NOT NULL,
     CONSTRAINT pk_template_slide PRIMARY KEY (id)
