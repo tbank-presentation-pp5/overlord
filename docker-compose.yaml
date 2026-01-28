@@ -31,8 +31,8 @@ services:
       - MINIO_DOMAIN=${MINIO_DOMAIN:-localhost}
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     volumes:
       - minio:/data
     networks:
@@ -58,7 +58,7 @@ services:
     image: ghcr.io/tbank-presentation-pp5/accounter:main
     container_name: accounter
     ports:
-      - "8001:8001"
+      - '8001:8001'
     environment:
       - HOST=${HOST_IP_ACCOUNTER:-0.0.0.0}
       - PORT=${PORT_ACCOUNTER:-8001}
@@ -69,6 +69,18 @@ services:
     volumes:
       - ./data:/data
     restart: unless-stopped
+    networks:
+      - common
+
+  collabora: # https://github.com/CollaboraOnline/online
+    image: collabora/code:25.04.8.2.1
+    restart: unless-stopped
+    environment:
+      - username=admin # admin ui /browser/dist/admin/admin.html
+      - password=admin
+      - extra_params=--o:ssl.enable=false --o:logging.level=warning --o:logging.level_startup=warning
+    ports:
+      - '9980:9980'
     networks:
       - common
 
