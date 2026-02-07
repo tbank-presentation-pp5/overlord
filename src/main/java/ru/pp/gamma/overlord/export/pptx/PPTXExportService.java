@@ -1,7 +1,9 @@
 package ru.pp.gamma.overlord.export.pptx;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.xslf.usermodel.*;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.pp.gamma.overlord.common.util.MinioRepository;
@@ -12,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static java.util.Comparator.comparingInt;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +40,10 @@ public class PPTXExportService {
     }
 
     private byte[] processPresentation(Presentation presentation, XMLSlideShow ppt) {
-        presentation.getSlides().forEach(slide -> createSlide(slide, ppt));
+        presentation.getSlides().stream()
+                .sorted(comparingInt(PresentationSlide::getOrderNumber))
+                .forEach(slide -> createSlide(slide, ppt));
+
         cleanTemplate(ppt, presentation.getSlides().size());
         return pptToByte(ppt);
     }

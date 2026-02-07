@@ -10,6 +10,15 @@ spring:
       ddl-auto: validate
   flyway:
     enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: tbank-presentation-overlord
+      auto-offset-reset: latest
+
+logging:
+  level:
+    org.apache.poi.xslf.usermodel.XSLFSheet: ERROR # disable warn "shape id 1 has been already used"
 
 management:
   endpoints:

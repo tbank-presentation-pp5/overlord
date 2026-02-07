@@ -6,7 +6,6 @@ import ru.pp.gamma.overlord.generation.pipeline.PresentationGenerationPipeline;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPrompt;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPromptBuilder;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
-import ru.pp.gamma.overlord.presentation.repository.PresentationRepository;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 import ru.pp.gamma.overlord.presentation.template.service.TemplatePresentationService;
 import ru.pp.gamma.overlord.presentationplan.entity.PresentationPlan;
@@ -17,7 +16,7 @@ import ru.pp.gamma.overlord.presentationplan.service.PresentationPlanService;
 public class PresentationGenerationService {
 
     private final PresentationGenerationPipeline presentationGenerationPipeline;
-    private final PresentationRepository presentationRepository;
+    private final PresentationService presentationService;
     private final GenerationPromptBuilder generationPromptBuilder;
     private final TemplatePresentationService templatePresentationService;
     private final PresentationPlanService presentationPlanService;
@@ -27,7 +26,7 @@ public class PresentationGenerationService {
         GenerationPrompt prompt = generationPromptBuilder.buildWithNoteSource(template, note, numberOfSlides);
 
         Presentation presentation = presentationGenerationPipeline.generate(template, prompt);
-        presentationRepository.save(presentation);
+        presentationService.save(presentation);
 
         return presentation;
     }
@@ -38,7 +37,7 @@ public class PresentationGenerationService {
         GenerationPrompt prompt = generationPromptBuilder.buildWithPlanSource(template, plan);
 
         Presentation presentation = presentationGenerationPipeline.generate(template, prompt);
-        presentationRepository.save(presentation);
+        presentationService.save(presentation);
 
         return presentation;
     }
