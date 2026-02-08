@@ -15,8 +15,12 @@ public class ImageMapper {
     public ImageResponse toImageResponse(Image image) {
         return new ImageResponse(
                 image.getId(),
-                imageService.generateUrlByName(image.getName())
+                toImageUrl(image)
         );
+    }
+
+    public String toImageUrl(Image image) {
+        return imageService.generateUrlByName(image.getName());
     }
 
 }
