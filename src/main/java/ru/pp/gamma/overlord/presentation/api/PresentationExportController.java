@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import ru.pp.gamma.overlord.export.image.ImageExportService;
 import ru.pp.gamma.overlord.export.pdf.PDFExportService;
 import ru.pp.gamma.overlord.export.pdfv2.PDFV2ExportService;
 import ru.pp.gamma.overlord.export.pptx.PPTXExportService;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
-import ru.pp.gamma.overlord.presentation.repository.PresentationRepository;
+import ru.pp.gamma.overlord.presentation.service.PresentationService;
+
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,15 +29,15 @@ public class PresentationExportController {
     private static final String PPTX_MEDIA_TYPE =
             "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 
-    private final PresentationRepository presentationRepository;
+    private final PresentationService presentationService;
     private final PPTXExportService pptxExportService;
     private final PDFExportService pdfExportService;
     private final PDFV2ExportService pdfV2ExportService;
+    private final ImageExportService imageExportService;
 
     @GetMapping("/pptx/download")
     public ResponseEntity<byte[]> exportPPTX(@PathVariable long id) {
-        Presentation presentation = presentationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presentation not found"));
+        Presentation presentation = presentationService.getById(id);
         byte[] exportResult = pptxExportService.export(presentation);
 
         String filename = toLatin(presentation.getName()) + ".pptx";
@@ -44,8 +50,7 @@ public class PresentationExportController {
 
     @GetMapping("/pdf/download")
     public ResponseEntity<byte[]> exportPDF(@PathVariable long id) {
-        Presentation presentation = presentationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presentation not found"));
+        Presentation presentation = presentationService.getById(id);
         byte[] exportResult = pdfExportService.export(presentation);
 
         String filename = toLatin(presentation.getName()) + ".pptx";
@@ -58,8 +63,7 @@ public class PresentationExportController {
 
     @GetMapping("/pdfv2/download")
     public ResponseEntity<byte[]> exportPDFV2(@PathVariable long id) {
-        Presentation presentation = presentationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presentation not found"));
+        Presentation presentation = presentationService.getById(id);
         byte[] exportResult = pdfV2ExportService.export(presentation);
 
         String filename = toLatin(presentation.getName()) + ".pptx";
@@ -67,6 +71,28 @@ public class PresentationExportController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(exportResult);
+    }
+
+    @GetMapping(value = "/images-in-zip/download", produces = "application/zip")
+    public ResponseEntity<StreamingResponseBody> exportImagesInZip(@PathVariable long id) {
+        Presentation presentation = presentationService.getById(id);
+        List<byte[]> images = imageExportService.export(presentation, 1);
+
+        StreamingResponseBody body = out -> {
+            try (ZipOutputStream zip = new ZipOutputStream(out)) {
+                zip.setLevel(0);
+
+                for (int i = 0; i < images.size(); i++) {
+                    zip.putNextEntry(new ZipEntry("slide%d.png".formatted(i + 1)));
+                    zip.write(images.get(i));
+                    zip.closeEntry();
+                }
+            }
+        };
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"images.zip\"")
+                .body(body);
     }
 
     private static String toLatin(String cyrillic) {
