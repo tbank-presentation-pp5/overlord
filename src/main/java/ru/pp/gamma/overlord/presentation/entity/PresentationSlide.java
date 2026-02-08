@@ -3,6 +3,7 @@ package ru.pp.gamma.overlord.presentation.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ru.pp.gamma.overlord.image.entity.Image;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplateSlide;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "presentation_slide",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"order", "id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"order_number", "id"})
 )
 public class PresentationSlide {
 
@@ -27,9 +28,13 @@ public class PresentationSlide {
     @JoinColumn(name = "presentation_id", nullable = false)
     private Presentation presentation;
 
-    @OneToMany(mappedBy = "slide", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "slide", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<SlideField> fields;
 
     @Column(name = "order_number", nullable = false)
     private Integer orderNumber;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "image_preview_id", nullable = true)
+    private Image preview;
 }

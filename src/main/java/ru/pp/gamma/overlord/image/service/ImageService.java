@@ -16,6 +16,8 @@ public class ImageService {
 
     private static final String EXTENSION = "jpeg";
     private static final String MIME_TYPE = "image/jpeg";
+    private static final String EXTENSION_PNG = "png";
+    private static final String MIME_TYPE_PNG = "image/png";
 
     @Value("${minio.bucket}")
     private String bucket;
@@ -25,8 +27,14 @@ public class ImageService {
     private final Environment environment;
 
     public String save(byte[] image) {
-        String name = generateName();
+        String name = generateName(EXTENSION);
         minioRepository.put(bucket, name, MIME_TYPE, image);
+        return name;
+    }
+
+    public String savePng(byte[] image) {
+        String name = generateName(EXTENSION_PNG);
+        minioRepository.put(bucket, name, MIME_TYPE_PNG, image);
         return name;
     }
 
@@ -39,7 +47,7 @@ public class ImageService {
         return Arrays.asList(environment.getActiveProfiles()).contains("prod");
     }
 
-    private String generateName() {
-        return UUID.randomUUID().toString() + "." + EXTENSION;
+    private String generateName(String extension) {
+        return UUID.randomUUID().toString() + "." + extension;
     }
 }
