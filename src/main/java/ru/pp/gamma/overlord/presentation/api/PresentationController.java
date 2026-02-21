@@ -20,7 +20,7 @@ public class PresentationController {
 
     @GetMapping("/{id}")
     public PresentationResponse getById(@PathVariable long id) {
-        Presentation presentation = presentationService.getById(id);
+        Presentation presentation = presentationService.getByIdOrderedSlides(id);
         return apiPresentationMapper.toResponse(presentation);
     }
 
