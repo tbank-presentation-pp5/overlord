@@ -6,8 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
+import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.repository.PresentationRepository;
 import ru.pp.gamma.overlord.presentationpreview.service.PresentationPreviewSender;
+
+import java.util.Comparator;
+
+import static java.util.Comparator.comparingInt;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +24,18 @@ public class PresentationService {
     public Presentation getById(long id) {
         return presentationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Presentation not found"));
+    }
+
+    /**
+     * Презентация по id с дополнительным отсортированным список слайдов
+     *
+     * @param id id презентации
+     * @return презентация
+     */
+    public Presentation getByIdOrderedSlides(long id) {
+        Presentation presentation = getById(id);
+        presentation.getSlides().sort(comparingInt(PresentationSlide::getOrderNumber));
+        return presentation;
     }
 
     public void save(Presentation presentation) {
