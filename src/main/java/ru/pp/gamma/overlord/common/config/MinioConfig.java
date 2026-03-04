@@ -12,10 +12,16 @@ public class MinioConfig {
 
     @Bean
     public MinioClient minioClient(MinioProps minioProps) {
-        return MinioClient.builder()
+        MinioClient client = MinioClient.builder()
                 .credentials(minioProps.getUser(), minioProps.getPassword())
                 .endpoint(minioProps.getConnectUrl())
                 .build();
+
+        if (Boolean.TRUE.equals(minioProps.getUsePathStyle())) {
+            client.disableVirtualStyleEndpoint();
+        }
+
+        return client;
     }
 
 }
