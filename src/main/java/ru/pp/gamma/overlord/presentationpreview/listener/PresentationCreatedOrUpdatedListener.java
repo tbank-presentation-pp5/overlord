@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.pp.gamma.overlord.export.image.ImageExportService;
 import ru.pp.gamma.overlord.image.entity.Image;
+import ru.pp.gamma.overlord.image.enums.ImageFormat;
 import ru.pp.gamma.overlord.image.repository.ImageRepository;
 import ru.pp.gamma.overlord.image.service.ImageService;
 import ru.pp.gamma.overlord.kafka.message.PresentationSavedOrUpdatedMessage;
@@ -51,7 +52,7 @@ public class PresentationCreatedOrUpdatedListener {
 
         // 2. Сохраняем в minio
         List<Image> imageEntities = images.stream()
-                .map(imageService::savePng)
+                .map(img -> imageService.save(img, ImageFormat.PNG))
                 .map(name -> new Image()
                         .setName(name))
                 .toList();
