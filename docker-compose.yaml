@@ -133,6 +133,17 @@ services:
     networks:
       - common
 
+  xray:
+    image: teddysun/xray:26.2.6
+    restart: unless-stopped
+    command: xray -c /etc/xray/config.json
+    volumes:
+      - ./config-vpn.json:/etc/xray/config.json
+    ports:
+      - "127.0.0.1:2088:2080" # Порт в inbound конфига должен совпадать
+    networks:
+      - common
+
   app:
     build:
       dockerfile: Dockerfile

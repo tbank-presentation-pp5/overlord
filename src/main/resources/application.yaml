@@ -52,3 +52,8 @@ minio:
 
 collabora:
   url: ${COLLABORA_URL:http://localhost:9980}
+
+xray:
+  host: ${XRAY_HOST:localhost}
+  port: ${XRAY_PORT:2080}
+  enabled: ${XRAY_ENABLED:-false}
