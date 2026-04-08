@@ -61,4 +61,4 @@ collabora:
 xray:
   host: ${XRAY_HOST:localhost}
   port: ${XRAY_PORT:2080}
-  enabled: ${XRAY_ENABLED:-false}
+  enabled: ${XRAY_ENABLED:false}
