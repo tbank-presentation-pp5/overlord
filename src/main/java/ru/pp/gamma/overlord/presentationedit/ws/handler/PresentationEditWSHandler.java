@@ -7,7 +7,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import ru.pp.gamma.overlord.presentationedit.SessionWSStorage;
+import ru.pp.gamma.overlord.presentationedit.service.SessionWSStorage;
 import ru.pp.gamma.overlord.presentationedit.handler.PresentationEditMessageHandlerRegistry;
 import ru.pp.gamma.overlord.presentationedit.mapper.PresentationEditWSMessageMapper;
 import ru.pp.gamma.overlord.presentationedit.ws.message.common.PresentationEditBaseMessage;

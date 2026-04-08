@@ -15,6 +15,11 @@ spring:
     consumer:
       group-id: tbank-presentation-overlord
       auto-offset-reset: latest
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
 
 logging:
   level:
