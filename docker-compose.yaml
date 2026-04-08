@@ -4,6 +4,7 @@ volumes:
   postgres:
   minio:
   kafka:
+  redis:
 
 networks:
   common:
@@ -144,6 +145,16 @@ services:
     networks:
       - common
 
+  redis:
+    image: redis:8.6.2
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+    networks:
+      - common
+
   app:
     build:
       dockerfile: Dockerfile
@@ -172,6 +183,15 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
 
       - KAFKA_BOOTSTRAP_SERVERS=kafka:19092
+
+      - COLLABORA_URL=${COLLABORA_URL:-http://collabora:9980}
+
+      - XRAY_HOST=${XRAY_HOST:-xray}
+      - XRAY_PORT=${XRAY_PORT:-2080}
+      - XRAY_ENABLED=${XRAY_ENABLED:-false}
+
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
     ports:
       - '8080:8080'
     depends_on:
@@ -182,6 +202,10 @@ services:
       postgres:
         condition: service_started
       accounter:
+        condition: service_started
+      kafka:
+        condition: service_started
+      redis:
         condition: service_started
     networks:
       - common

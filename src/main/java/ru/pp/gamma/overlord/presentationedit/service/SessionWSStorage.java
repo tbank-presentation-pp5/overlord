@@ -1,4 +1,4 @@
-package ru.pp.gamma.overlord.presentationedit;
+package ru.pp.gamma.overlord.presentationedit.service;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;

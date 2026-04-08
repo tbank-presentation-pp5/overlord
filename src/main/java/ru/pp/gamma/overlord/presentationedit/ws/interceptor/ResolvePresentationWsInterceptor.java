@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import ru.pp.gamma.overlord.presentation.service.PresentationService;
-import ru.pp.gamma.overlord.presentationedit.SessionWSStorage;
+import ru.pp.gamma.overlord.presentationedit.service.SessionWSStorage;
 
 import java.util.Map;
 
