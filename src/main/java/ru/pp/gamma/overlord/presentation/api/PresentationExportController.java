@@ -1,19 +1,20 @@
 package ru.pp.gamma.overlord.presentation.api;
 
+import com.google.api.services.drive.model.File;
 import com.ibm.icu.text.Transliterator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import ru.pp.gamma.overlord.export.googleslides.GoogleSlidesExportService;
 import ru.pp.gamma.overlord.export.image.ImageExportService;
 import ru.pp.gamma.overlord.export.pdf.PDFExportService;
 import ru.pp.gamma.overlord.export.pdfv2.PDFV2ExportService;
 import ru.pp.gamma.overlord.export.pptx.PPTXExportService;
+import ru.pp.gamma.overlord.presentation.dto.export.PresentationExportSlidesRequest;
+import ru.pp.gamma.overlord.presentation.dto.export.PresentationExportSlidesResponse;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.service.PresentationService;
 
@@ -28,12 +29,14 @@ public class PresentationExportController {
 
     private static final String PPTX_MEDIA_TYPE =
             "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+    private static final String PATTERN_GOOGLE_FILE_VIEW = "https://drive.google.com/file/d/%s/view";
 
     private final PresentationService presentationService;
     private final PPTXExportService pptxExportService;
     private final PDFExportService pdfExportService;
     private final PDFV2ExportService pdfV2ExportService;
     private final ImageExportService imageExportService;
+    private final GoogleSlidesExportService googleSlidesExportService;
 
     @GetMapping("/pptx/download")
     public ResponseEntity<byte[]> exportPPTX(@PathVariable long id) {
@@ -93,6 +96,16 @@ public class PresentationExportController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"images.zip\"")
                 .body(body);
+    }
+
+    @PostMapping(value = "/google-slides/export")
+    public PresentationExportSlidesResponse exportGoogleSlides(
+            @PathVariable long id,
+            @RequestBody PresentationExportSlidesRequest request
+    ) {
+        Presentation presentation = presentationService.getById(id);
+        File file = googleSlidesExportService.export(presentation, request.oauthAccessToken());
+        return new PresentationExportSlidesResponse(PATTERN_GOOGLE_FILE_VIEW.formatted(file.getId()));
     }
 
     private static String toLatin(String cyrillic) {
