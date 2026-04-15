@@ -5,93 +5,79 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.pp.gamma.overlord.ai.account.CfAccountService;
 import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
-import ru.pp.gamma.overlord.ai.api.AiTextClient;
 import ru.pp.gamma.overlord.ai.cf.text.dto.response.*;
-
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
-public class CfResponsesStyleAiTextClient implements AiTextClient {
+public class CfResponsesStyleAiTextClient {
 
     private static final String URL_TEMPLATE = "https://api.cloudflare.com/client/v4/accounts/%s/ai/v1/responses";
-    private static final int MAX_TOKENS = 130964;
+    private static final int MAX_TOKENS = 130_964;
     private static final boolean STREAM = false;
 
     private final RestClient client;
-    private final CfProps cfProps;
     private final CfAccountService accountService;
 
     public CfResponsesStyleAiTextClient(
             @Qualifier("aiRestClient") RestClient client,
-            CfProps cfProps,
             CfAccountService accountService
     ) {
         this.client = client;
-        this.cfProps = cfProps;
         this.accountService = accountService;
     }
 
-    @Override
-    public String generate(String systemPrompt, String userPrompt) {
+    public String generate(String systemPrompt, String userPrompt, String modelId) {
         CfAccount account = accountService.getAccount();
 
         CfTextResponseDto response = client.post()
-                .uri(getUrl(account.accountId()))
+                .uri(buildUrl(account.accountId()))
                 .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
-                .body(getBody(systemPrompt, userPrompt))
+                .body(buildBody(systemPrompt, userPrompt, modelId))
                 .retrieve()
                 .body(CfTextResponseDto.class);
 
         if (response == null) {
-            throw new RuntimeException("CF AI API returned null response");
+            throw new RuntimeException("CF Responses API returned null response");
         }
 
-        return extractTextFromResponse(response);
+        return extractText(response);
     }
 
-    private String extractTextFromResponse(CfTextResponseDto response) {
+    private String extractText(CfTextResponseDto response) {
         if (response.output() == null || response.output().isEmpty()) {
-            throw new RuntimeException("No output in CF AI response");
+            throw new RuntimeException("No output in CF Responses API response");
         }
 
         for (CfOutput output : response.output()) {
-            if (CfTextRole.assistant.equals(output.role())) {
-                if (output.content() != null && !output.content().isEmpty()) {
-                    StringBuilder textBuilder = new StringBuilder();
-                    for (CfContent content : output.content()) {
-                        if (content.text() != null) {
-                            textBuilder.append(content.text());
-                        }
-                    }
-                    String result = textBuilder.toString();
-                    if (!result.isEmpty()) {
-                        return result;
-                    }
-                }
+            if (CfTextRole.assistant.equals(output.role()) &&
+                    output.content() != null && !output.content().isEmpty()) {
+
+                StringBuilder sb = new StringBuilder();
+                output.content().forEach(c -> {
+                    if (c.text() != null) sb.append(c.text());
+                });
+
+                String result = sb.toString();
+                if (!result.isEmpty()) return result;
             }
         }
 
-        throw new RuntimeException("No assistant message found in response output");
+        throw new RuntimeException("No assistant message found in CF Responses API output");
     }
 
-    private String getUrl(String accountId) {
+    private String buildUrl(String accountId) {
         return URL_TEMPLATE.formatted(accountId);
     }
 
-    private CfTextRequestDto getBody(String systemPrompt, String userPrompt) {
-        CfTextMessageElement systemMessage = new CfTextMessageElement(CfTextRole.system, systemPrompt);
-        CfTextMessageElement userMessage = new CfTextMessageElement(CfTextRole.user, userPrompt);
-
-        // Попозже могу тоже в dto сделать у Reasoning
-        // effort и summary
+    private CfTextRequestDto buildBody(String systemPrompt, String userPrompt, String modelId) {
         CfReasoning reasoning = new CfReasoning("high", "detailed");
 
         return new CfTextRequestDto(
-                cfProps.getResponsesStyleModel(),
-                List.of(systemMessage, userMessage),
+                modelId,
+                systemPrompt,
+                userPrompt,
                 reasoning,
                 MAX_TOKENS,
                 MAX_TOKENS,

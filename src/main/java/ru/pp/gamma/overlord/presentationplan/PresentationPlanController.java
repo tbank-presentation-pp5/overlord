@@ -21,7 +21,7 @@ public class PresentationPlanController {
     @PostMapping("/generate")
     public PresentationPlanResponseDto generate(@RequestBody GeneratePresentationPlanRequestDto request) {
         PresentationPlan plan = presentationPlanGenerationService
-                .generate(request.shortDescription(), request.numberOfSlides());
+                .generate(request.shortDescription(), request.numberOfSlides(), request.model());
         presentationPlanService.save(plan);
         return presentationPlanMapper.mapToDto(plan);
     }

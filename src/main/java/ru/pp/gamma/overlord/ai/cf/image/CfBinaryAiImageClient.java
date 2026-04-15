@@ -6,14 +6,11 @@ import org.springframework.web.client.RestClient;
 import ru.pp.gamma.overlord.ai.account.CfAccountService;
 import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
 import ru.pp.gamma.overlord.ai.cf.image.dto.CfImageRequestDto;
-import ru.pp.gamma.overlord.ai.cf.image.dto.CfImageResultResponseDto;
-
-import java.util.Base64;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
-public class CfBase64AiImageClient {
+public class CfBinaryAiImageClient {
 
     private static final String URL_TEMPLATE =
             "https://api.cloudflare.com/client/v4/accounts/%s/ai/run/%s";
@@ -21,7 +18,7 @@ public class CfBase64AiImageClient {
     private final RestClient client;
     private final CfAccountService accountService;
 
-    public CfBase64AiImageClient(
+    public CfBinaryAiImageClient(
             @Qualifier("aiRestClient") RestClient client,
             CfAccountService accountService
     ) {
@@ -32,19 +29,19 @@ public class CfBase64AiImageClient {
     public byte[] generate(String prompt, int height, int width, String modelId) {
         CfAccount account = accountService.getAccount();
 
-        CfImageResultResponseDto response = client.post()
+        byte[] imageBytes = client.post()
                 .uri(buildUrl(account.accountId(), modelId))
                 .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
                 .body(new CfImageRequestDto(prompt, height, width))
                 .retrieve()
-                .body(CfImageResultResponseDto.class);
+                .body(byte[].class);
 
-        if (response == null || !response.success() || response.result() == null) {
-            throw new RuntimeException("CF Base64 image API returned invalid response for model: " + modelId);
+        if (imageBytes == null || imageBytes.length == 0) {
+            throw new RuntimeException("CF Binary image API returned empty response for model: " + modelId);
         }
 
-        return Base64.getDecoder().decode(response.result().image());
+        return imageBytes;
     }
 
     private String buildUrl(String accountId, String modelId) {

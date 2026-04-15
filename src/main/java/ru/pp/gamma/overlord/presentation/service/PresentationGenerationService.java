@@ -2,6 +2,8 @@ package ru.pp.gamma.overlord.presentation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.pp.gamma.overlord.ai.model.AiImageModel;
+import ru.pp.gamma.overlord.ai.model.AiModel;
 import ru.pp.gamma.overlord.generation.pipeline.PresentationGenerationPipeline;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPrompt;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPromptBuilder;
@@ -21,22 +23,33 @@ public class PresentationGenerationService {
     private final TemplatePresentationService templatePresentationService;
     private final PresentationPlanService presentationPlanService;
 
-    public Presentation generateFromNote(String note, long templatePresentationId, int numberOfSlides) {
+    public Presentation generateFromNote(
+            String note,
+            long templatePresentationId,
+            int numberOfSlides,
+            AiModel textModel,
+            AiImageModel imageModel
+    ) {
         TemplatePresentation template = templatePresentationService.getById(templatePresentationId);
         GenerationPrompt prompt = generationPromptBuilder.buildWithNoteSource(template, note, numberOfSlides);
 
-        Presentation presentation = presentationGenerationPipeline.generate(template, prompt);
+        Presentation presentation = presentationGenerationPipeline.generate(template, prompt, textModel, imageModel);
         presentationService.save(presentation);
 
         return presentation;
     }
 
-    public Presentation generateFromPlan(long planId, long templatePresentationId) {
+    public Presentation generateFromPlan(
+            long planId,
+            long templatePresentationId,
+            AiModel textModel,
+            AiImageModel imageModel
+    ) {
         TemplatePresentation template = templatePresentationService.getById(templatePresentationId);
         PresentationPlan plan = presentationPlanService.getById(planId);
         GenerationPrompt prompt = generationPromptBuilder.buildWithPlanSource(template, plan);
 
-        Presentation presentation = presentationGenerationPipeline.generate(template, prompt);
+        Presentation presentation = presentationGenerationPipeline.generate(template, prompt, textModel, imageModel);
         presentationService.save(presentation);
 
         return presentation;

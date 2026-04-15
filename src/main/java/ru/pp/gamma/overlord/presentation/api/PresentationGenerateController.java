@@ -22,15 +22,24 @@ public class PresentationGenerateController {
 
     @PostMapping("/note")
     public PresentationResponse generateFromNote(@RequestBody PresentationGenerationFromTextRequest request) {
-        Presentation presentation = presentationGenerationService
-                .generateFromNote(request.note(), request.templatePresentationId(), request.numberOfSlides());
+        Presentation presentation = presentationGenerationService.generateFromNote(
+                request.note(),
+                request.templatePresentationId(),
+                request.numberOfSlides(),
+                request.textModel(),
+                request.imageModel()
+        );
         return apiPresentationMapper.toResponse(presentation);
     }
 
     @PostMapping("/plan")
     public PresentationResponse generateFromPlan(@RequestBody PresentationGenerationFromPlanRequest request) {
-        Presentation presentation = presentationGenerationService
-                .generateFromPlan(request.planId(), request.templatePresentationId());
+        Presentation presentation = presentationGenerationService.generateFromPlan(
+                request.planId(),
+                request.templatePresentationId(),
+                request.textModel(),
+                request.imageModel()
+        );
         return apiPresentationMapper.toResponse(presentation);
     }
 }
