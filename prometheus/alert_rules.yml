@@ -1,0 +1,56 @@
+groups:
+  - name: app-alerts
+    rules:
+      - alert: AppDown
+        expr: up{job="app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Приложение не доступно"
+          description: "Приложение не отвечает более 30 секунд"
+
+      - alert: HighCpuUsage
+        expr: system_cpu_usage > 0.8
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокое использование CPU"
+          description: "CPU выше 80% более 1 минуты"
+
+      - alert: HighMemoryUsage
+        expr: jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"} > 0.85
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокое использование памяти JVM"
+          description: "Heap использован более 85%"
+
+      - alert: HighErrorRate
+        expr: sum(rate(http_server_requests_seconds_count{outcome!="SUCCESS"}[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокий уровень ошибок"
+          description: "Доля ошибок HTTP превышает норму"
+
+      - alert: HighLatency
+        expr: sum(rate(http_server_requests_seconds_sum[5m])) / sum(rate(http_server_requests_seconds_count[5m])) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокая задержка"
+          description: "Средняя задержка выше 1 секунды"
+
+      - alert: DatabasePoolExhausted
+        expr: hikaricp_connections_active / hikaricp_connections_max > 0.9
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Пул соединений БД почти исчерпан"
+          description: "Более 90% соединений БД используются"
