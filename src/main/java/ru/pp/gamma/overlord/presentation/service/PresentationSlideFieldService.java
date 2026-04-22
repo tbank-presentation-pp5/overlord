@@ -1,6 +1,5 @@
 package ru.pp.gamma.overlord.presentation.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,4 +19,12 @@ public class PresentationSlideFieldService {
         presentationSlideFieldRepository.save(field);
     }
 
+    public SlideField getById(long fieldId) {
+        return presentationSlideFieldRepository.findById(fieldId)
+                .orElseThrow(() -> new RuntimeException("Not found slide field"));
+    }
+
+    public void save(SlideField slideField) {
+        presentationSlideFieldRepository.save(slideField);
+    }
 }

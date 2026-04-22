@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.pp.gamma.overlord.presentationedit.ws.message.EditImageMessage;
 import ru.pp.gamma.overlord.presentationedit.ws.message.EditPlainTextMessage;
 import ru.pp.gamma.overlord.presentationedit.ws.message.common.PresentationEditBaseMessage;
 import ru.pp.gamma.overlord.presentationedit.ws.message.common.PresentationEditMessage;
@@ -19,7 +20,8 @@ public class PresentationEditWSMessageMapper {
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     private static final Map<PresentationEditMessageType, Class<?>> TYPE_TO_CLASS = Map.of(
-            PresentationEditMessageType.EDIT_PLAIN_TEXT, EditPlainTextMessage.class
+            PresentationEditMessageType.EDIT_PLAIN_TEXT, EditPlainTextMessage.class,
+            PresentationEditMessageType.EDIT_IMAGE, EditImageMessage.class
     );
 
     public PresentationEditBaseMessage map(String json) {
