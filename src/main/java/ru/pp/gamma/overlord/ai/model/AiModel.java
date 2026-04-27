@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum AiModel {
     CF_MISTRAL_SMALL(
             "@cf/mistralai/mistral-small-3.1-24b-instruct",
-            AiApiStyle.CF_PATH,
+            AiApiStyle.CF_PATH_SMART,
             8_192,
             "Mistral Small 3.1 24B (Cloudflare)"
     ),
@@ -50,7 +50,7 @@ public enum AiModel {
     ),
     CF_QWEN_2_5_CODER(
             "@cf/qwen/qwen2.5-coder-32b-instruct",
-            AiApiStyle.CF_PATH,
+            AiApiStyle.CF_PATH_SMART,
             4_096, // context window 32768 total, safe output limit
             "Qwen 2.5 Coder (Cloudflare)"
     ),
