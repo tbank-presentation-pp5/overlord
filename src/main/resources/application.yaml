@@ -62,3 +62,8 @@ xray:
   host: ${XRAY_HOST:localhost}
   port: ${XRAY_PORT:2080}
   enabled: ${XRAY_ENABLED:false}
+
+external-client:
+  pexels:
+    api-key: ${PEXELS_API_KEY}
+    base-url: ${PEXELS_BASE_URL:https://api.pexels.com/v1}

@@ -63,15 +63,18 @@ public class ImageService {
             throw new RuntimeException("Image not valid, contentType=%s".formatted(image.getContentType()));
         }
 
-        String name = generateName(imageFormat);
-        Image imageEntity = new Image().setName(name);
-        imageRepository.save(imageEntity);
-
         try {
-            minioRepository.put(minioProps.getBucket(), name, imageFormat.getMimeType(), image.getBytes());
+            return uploadImage(image.getBytes(), imageFormat);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Image uploadImage(byte[] imageData, ImageFormat imageFormat) {
+        String name = generateName(imageFormat);
+        Image imageEntity = new Image().setName(name);
+        imageRepository.save(imageEntity);
+        minioRepository.put(minioProps.getBucket(), name, imageFormat.getMimeType(), imageData);
 
         return imageEntity;
     }

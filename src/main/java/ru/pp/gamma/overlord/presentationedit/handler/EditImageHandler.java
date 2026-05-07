@@ -7,7 +7,6 @@ import org.springframework.web.socket.WebSocketSession;
 import ru.pp.gamma.overlord.image.entity.Image;
 import ru.pp.gamma.overlord.image.mapper.ImageMapper;
 import ru.pp.gamma.overlord.image.service.ImageService;
-import ru.pp.gamma.overlord.presentation.entity.SlideField;
 import ru.pp.gamma.overlord.presentation.service.PresentationSlideFieldService;
 import ru.pp.gamma.overlord.presentationedit.redis.producer.EditPresentationRedisNotifier;
 import ru.pp.gamma.overlord.presentationedit.util.PresentationEditConsts;
@@ -36,15 +35,10 @@ public class EditImageHandler implements PresentationEditMessageHandler {
         EditImageMessage message = (EditImageMessage) baseMessage;
         Image newImage = imageService.getById(message.getImageId());
 
-        SlideField slideField = presentationSlideFieldService.getById(message.getFieldId());
-        Image oldImage = slideField.getImage();
-
-        imageService.markAsDeleted(oldImage);
-        slideField.setImage(newImage);
-        presentationSlideFieldService.save(slideField);
+        presentationSlideFieldService.swapImage(message.getFieldId(), newImage.getId());
 
         ImageUpdatedMessage responseMessage = new ImageUpdatedMessage()
-                .setFieldId(slideField.getId())
+                .setFieldId(message.getFieldId())
                 .setImageId(newImage.getId())
                 .setUrl(imageMapper.toImageUrl(newImage));
 

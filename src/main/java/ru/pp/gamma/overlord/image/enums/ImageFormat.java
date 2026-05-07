@@ -23,4 +23,10 @@ public enum ImageFormat {
                 .filter(format -> format.mimeType.equals(mimeType))
                 .findFirst();
     }
+
+    public static Optional<ImageFormat> fromExtension(String extension) {
+        return Arrays.stream(ImageFormat.values())
+                .filter(format -> format.extension.equals(extension))
+                .findFirst();
+    }
 }
