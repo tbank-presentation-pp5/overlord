@@ -192,6 +192,8 @@ services:
 
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
+
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
     ports:
       - '8080:8080'
     depends_on:

@@ -4,4 +4,5 @@ public enum PresentationEditMessageType {
     EDIT_PLAIN_TEXT,
     EDIT_IMAGE,
     IMAGE_UPDATED,
+    EDIT_IMAGE_BY_PEXELS,
 }

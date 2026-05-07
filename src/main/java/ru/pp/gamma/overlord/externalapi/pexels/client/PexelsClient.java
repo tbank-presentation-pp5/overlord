@@ -12,6 +12,7 @@ import ru.pp.gamma.overlord.externalapi.pexels.dto.PexelsPhoto;
 public class PexelsClient {
 
     private static final String SEARCH = "/search";
+    private static final String PHOTO = "/photos/{id}";
 
     private final RestClient pexelsRestClient;
 
@@ -34,6 +35,13 @@ public class PexelsClient {
                 .retrieve()
                 .body(new ParameterizedTypeReference<PexelsPagination<PexelsPhoto>>() {
                 });
+    }
+
+    public PexelsPhoto getById(long id) {
+        return pexelsRestClient.get()
+                .uri(PHOTO, id)
+                .retrieve()
+                .body(PexelsPhoto.class);
     }
 
 }
