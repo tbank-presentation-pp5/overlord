@@ -50,6 +50,11 @@ public class PPTXDefaultShapeRenderer implements PPTXRenderer {
 
     private void renderText(SlideField field, XSLFShape shape) {
         XSLFTextBox textShape = (XSLFTextBox) shape;
+
+        // Очищаем все runs во всех параграфах, чтобы не оставалось
+        textShape.getTextParagraphs()
+                .forEach(p -> p.getTextRuns().forEach(r -> r.setText("")));
+        
         textShape.getTextParagraphs()
                 .getFirst()
                 .getTextRuns()

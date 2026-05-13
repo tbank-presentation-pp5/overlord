@@ -26,8 +26,10 @@ public class PPTXChartPieCreator {
             XSSFWorkbook workbook = chart.getWorkbook();
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-            // 2. Заполянем заголовок диаграммы. 1 строка, 2 ячейка
-            sheet.getRow(0).getCell(1).setCellValue(getTitle(field));
+            // 2. Устанавливаем заголовок диаграммы напрямую в XML чарта
+            String title = getTitle(field);
+            chart.setTitleText(title);
+            sheet.getRow(0).getCell(1).setCellValue(title);
 
             // 3. Записываем данные диаграммы
             for (int i = 0; i < categories.size(); i++) {
