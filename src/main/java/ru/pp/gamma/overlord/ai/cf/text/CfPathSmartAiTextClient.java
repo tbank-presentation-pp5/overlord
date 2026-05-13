@@ -12,8 +12,11 @@ import ru.pp.gamma.overlord.ai.account.CfAccountService;
 import ru.pp.gamma.overlord.ai.account.dto.CfAccount;
 import ru.pp.gamma.overlord.ai.cf.text.dto.pathopenai.CfPathOpenAiInputMessageDto;
 import ru.pp.gamma.overlord.ai.cf.text.dto.pathopenai.CfPathOpenAiRequestDto;
+import ru.pp.gamma.overlord.ai.model.AiModelParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,14 +43,14 @@ public class CfPathSmartAiTextClient {
         this.objectMapper = objectMapper;
     }
 
-    public String generate(String systemPrompt, String userPrompt, String modelId, int maxTokens) {
+    public String generate(String systemPrompt, String userPrompt, String modelId, Map<AiModelParam, Object> params) {
         CfAccount account = accountService.getAccount();
 
         JsonNode root = client.post()
                 .uri(buildUrl(account.accountId(), modelId))
                 .header("Authorization", "Bearer " + account.authToken())
                 .contentType(APPLICATION_JSON)
-                .body(buildBody(systemPrompt, userPrompt, maxTokens))
+                .body(buildBody(systemPrompt, userPrompt, params))
                 .retrieve()
                 .body(JsonNode.class);
 
@@ -257,7 +260,7 @@ public class CfPathSmartAiTextClient {
     }
 
     private String fixMissingObjectBraces(String json) {
-        return json.replaceAll("(\\],)(\\s*)(\\{)", "$1}$2$3");
+        return json.replaceAll("(],)(\\s*)(\\{)", "$1}$2$3");
     }
 
     private String textNode(JsonNode node, String field) {
@@ -273,14 +276,18 @@ public class CfPathSmartAiTextClient {
         return URL_TEMPLATE.formatted(accountId, modelId);
     }
 
-    private CfPathOpenAiRequestDto buildBody(String systemPrompt, String userPrompt, int maxTokens) {
+    private CfPathOpenAiRequestDto buildBody(String systemPrompt, String userPrompt, Map<AiModelParam, Object> params) {
+        Map<String, Object> extraParams = new HashMap<>();
+        if (params != null) {
+            params.forEach((param, value) -> extraParams.put(param.getJsonKey(), value));
+        }
+
         return new CfPathOpenAiRequestDto(
                 List.of(
                         new CfPathOpenAiInputMessageDto("system", systemPrompt),
                         new CfPathOpenAiInputMessageDto("user", userPrompt)
                 ),
-                maxTokens,
-                true
+                extraParams
         );
     }
 }

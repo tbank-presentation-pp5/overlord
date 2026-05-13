@@ -72,7 +72,7 @@ public class CfResponsesStyleAiTextClient {
     }
 
     private CfTextRequestDto buildBody(String systemPrompt, String userPrompt, String modelId) {
-        CfReasoning reasoning = new CfReasoning("high", "detailed");
+        CfReasoning reasoning = new CfReasoning("medium", "auto");
 
         return new CfTextRequestDto(
                 modelId,
@@ -80,7 +80,7 @@ public class CfResponsesStyleAiTextClient {
                 userPrompt,
                 reasoning,
                 MAX_TOKENS,
-                MAX_TOKENS,
+                16_384,
                 STREAM
         );
     }

@@ -8,11 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.pp.gamma.overlord.ai.api.AiTextClient;
 import ru.pp.gamma.overlord.ai.model.AiModel;
+import ru.pp.gamma.overlord.ai.model.AiModelParam;
 import ru.pp.gamma.overlord.presentationplan.dto.ai.AiPresentationPlanElementDto;
 import ru.pp.gamma.overlord.presentationplan.entity.PresentationPlan;
 import ru.pp.gamma.overlord.presentationplan.mapper.AiPresentationPlanMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -61,14 +63,20 @@ public class PresentationPlanGenerationService {
     private final ObjectMapper objectMapper;
     private final AiPresentationPlanMapper aiPresentationPlanMapper;
 
-    public PresentationPlan generate(String description, int countSlides, AiModel model) {
-        String response = aiTextClient.generate(SYSTEM_PROMPT, getUserPrompt(description, countSlides), model);
+    public PresentationPlan generate(String description, int countSlides,
+                                     AiModel model, Map<AiModelParam, Object> modelParams) {
+        String response = aiTextClient.generate(
+                SYSTEM_PROMPT,
+                getUserPrompt(description, countSlides),
+                model,
+                modelParams
+        );
         List<AiPresentationPlanElementDto> parsed = parseResponse(response, model);
         return aiPresentationPlanMapper.map(parsed, description, countSlides);
     }
 
     public PresentationPlan generate(String description, int countSlides) {
-        return generate(description, countSlides, DEFAULT_MODEL);
+        return generate(description, countSlides, DEFAULT_MODEL, null);
     }
 
     private String getUserPrompt(String description, int slidesCount) {

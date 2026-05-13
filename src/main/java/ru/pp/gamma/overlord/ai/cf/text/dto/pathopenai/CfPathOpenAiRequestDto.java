@@ -1,16 +1,14 @@
 package ru.pp.gamma.overlord.ai.cf.text.dto.pathopenai;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 
 import java.util.List;
+import java.util.Map;
 
 public record CfPathOpenAiRequestDto(
         List<CfPathOpenAiInputMessageDto> messages,
 
-        @JsonProperty("max_tokens")
-        int maxTokens,
-
-        @JsonProperty("raw")
-        boolean raw
+        @JsonAnyGetter
+        Map<String, Object> extraParams
 ) {
 }

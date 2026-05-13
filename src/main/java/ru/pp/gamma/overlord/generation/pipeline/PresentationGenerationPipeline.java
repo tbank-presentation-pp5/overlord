@@ -3,6 +3,7 @@ package ru.pp.gamma.overlord.generation.pipeline;
 import org.springframework.stereotype.Component;
 import ru.pp.gamma.overlord.ai.model.AiImageModel;
 import ru.pp.gamma.overlord.ai.model.AiModel;
+import ru.pp.gamma.overlord.ai.model.AiModelParam;
 import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
 import ru.pp.gamma.overlord.generation.pipeline.step.PresentationGenerationStep;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPrompt;
@@ -10,6 +11,7 @@ import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class PresentationGenerationPipeline {
@@ -24,12 +26,14 @@ public class PresentationGenerationPipeline {
             TemplatePresentation template,
             GenerationPrompt prompt,
             AiModel textModel,
+            Map<AiModelParam, Object> textModelParams,
             AiImageModel imageModel
     ) {
         PresentationGenerationContext context = new PresentationGenerationContext();
         context.setTemplate(template);
         context.setPrompt(prompt);
         context.setAiModel(textModel);
+        context.setTextModelParams(textModelParams);
         context.setAiImageModel(imageModel);
 
         for (PresentationGenerationStep step : steps) {

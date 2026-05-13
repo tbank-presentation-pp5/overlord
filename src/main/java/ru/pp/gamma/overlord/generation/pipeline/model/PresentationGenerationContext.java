@@ -4,15 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.pp.gamma.overlord.ai.model.AiImageModel;
 import ru.pp.gamma.overlord.ai.model.AiModel;
+import ru.pp.gamma.overlord.ai.model.AiModelParam;
 import ru.pp.gamma.overlord.generation.prompt.GenerationPrompt;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.template.entity.TemplatePresentation;
 
+import java.util.Map;
+
 @Getter
 @Setter
 public class PresentationGenerationContext {
+
     private AiModel aiModel;
     private AiImageModel aiImageModel;
+    private Map<AiModelParam, Object> textModelParams;
     private GenerationPrompt prompt;
     private TemplatePresentation template;
     private Presentation presentation;

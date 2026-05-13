@@ -51,7 +51,7 @@ public class DescriptionSlidesBuilder {
         ObjectNode example = objectMapper.createObjectNode();
         example.put(SLIDE_TYPE, slide.getType().name());
 
-        slide.getFields().forEach(fieldInfo -> example.put(fieldInfo.getSchemaKey(), fieldInfo.getExample()));
+        slide.getFields().forEach(fieldInfo -> example.set(fieldInfo.getSchemaKey(), fieldInfo.getExample()));
 
         return example;
     }
