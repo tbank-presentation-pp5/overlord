@@ -10,8 +10,6 @@ import ru.pp.gamma.overlord.presentation.entity.PresentationSlide;
 import ru.pp.gamma.overlord.presentation.repository.PresentationRepository;
 import ru.pp.gamma.overlord.presentationpreview.service.PresentationPreviewSender;
 
-import java.util.Comparator;
-
 import static java.util.Comparator.comparingInt;
 
 @RequiredArgsConstructor
@@ -24,6 +22,10 @@ public class PresentationService {
     public Presentation getById(long id) {
         return presentationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Presentation not found"));
+    }
+
+    public boolean existsById(long id) {
+        return presentationRepository.existsById(id);
     }
 
     /**

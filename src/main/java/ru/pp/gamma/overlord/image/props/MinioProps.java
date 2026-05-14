@@ -15,5 +15,6 @@ public class MinioProps {
     private String utilBucket;
     private String connectUrl;
     private String publicDomain;
+    private Boolean usePathStyle;
 
 }

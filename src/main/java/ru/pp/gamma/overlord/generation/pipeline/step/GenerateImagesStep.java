@@ -6,6 +6,7 @@ import ru.pp.gamma.overlord.ai.api.AiImageClient;
 import ru.pp.gamma.overlord.ai.model.AiImageModel;
 import ru.pp.gamma.overlord.generation.pipeline.model.PresentationGenerationContext;
 import ru.pp.gamma.overlord.image.entity.Image;
+import ru.pp.gamma.overlord.image.enums.ImageFormat;
 import ru.pp.gamma.overlord.image.service.ImageService;
 import ru.pp.gamma.overlord.presentation.entity.Presentation;
 import ru.pp.gamma.overlord.presentation.entity.SlideField;
@@ -54,8 +55,7 @@ public class GenerateImagesStep implements PresentationGenerationStep {
                 imageSize.get("width").asInt(),
                 model
         );
-
-        String name = imageService.save(imageBytes);
+        String name = imageService.save(imageBytes, ImageFormat.JPEG);
 
         Image image = new Image();
         image.setName(name);
