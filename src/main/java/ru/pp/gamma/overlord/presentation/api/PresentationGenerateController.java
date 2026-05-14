@@ -1,10 +1,7 @@
 package ru.pp.gamma.overlord.presentation.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.pp.gamma.overlord.presentation.dto.PresentationGenerationFromPlanRequest;
 import ru.pp.gamma.overlord.presentation.dto.PresentationGenerationFromTextRequest;
 import ru.pp.gamma.overlord.presentation.dto.PresentationResponse;
@@ -21,16 +18,29 @@ public class PresentationGenerateController {
     private final ApiPresentationMapper apiPresentationMapper;
 
     @PostMapping("/note")
-    public PresentationResponse generateFromNote(@RequestBody PresentationGenerationFromTextRequest request) {
-        Presentation presentation = presentationGenerationService
-                .generateFromNote(request.note(), request.templatePresentationId(), request.numberOfSlides());
+    public PresentationResponse generateFromNote(
+            @RequestBody PresentationGenerationFromTextRequest request) {
+        Presentation presentation = presentationGenerationService.generateFromNote(
+                request.note(),
+                request.templatePresentationId(),
+                request.numberOfSlides(),
+                request.textModel(),
+                request.textModelParams(),
+                request.imageModel()
+        );
         return apiPresentationMapper.toResponse(presentation);
     }
 
     @PostMapping("/plan")
-    public PresentationResponse generateFromPlan(@RequestBody PresentationGenerationFromPlanRequest request) {
-        Presentation presentation = presentationGenerationService
-                .generateFromPlan(request.planId(), request.templatePresentationId());
+    public PresentationResponse generateFromPlan(
+            @RequestBody PresentationGenerationFromPlanRequest request) {
+        Presentation presentation = presentationGenerationService.generateFromPlan(
+                request.planId(),
+                request.templatePresentationId(),
+                request.textModel(),
+                request.textModelParams(),
+                request.imageModel()
+        );
         return apiPresentationMapper.toResponse(presentation);
     }
 }
