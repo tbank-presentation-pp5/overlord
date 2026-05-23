@@ -29,10 +29,12 @@ public class PresentationGenerationPipelineConfig {
     @Bean
     public GenerateImagesStep generateImagesStep(
             AiImageClient aiImageClient,
+            AiTextClient aiTextClient,
             ImageService imageService
     ) {
         return new GenerateImagesStep(
                 aiImageClient,
+                aiTextClient,
                 imageService
         );
     }
