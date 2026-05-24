@@ -3,6 +3,7 @@ package ru.pp.gamma.overlord.common.util;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.StatObjectArgs;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,18 @@ public class MinioRepository {
                     .build());
         } catch (Exception e) {
             throw new CustomMinioException(e);
+        }
+    }
+
+    public boolean exists(String bucket, String name) {
+        try {
+            minioClient.statObject(StatObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(name)
+                    .build());
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

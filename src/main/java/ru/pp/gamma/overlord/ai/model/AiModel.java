@@ -11,7 +11,7 @@ public enum AiModel {
     CF_MISTRAL_SMALL(
             "@cf/mistralai/mistral-small-3.1-24b-instruct",
             AiApiStyle.CF_PATH_SMART,
-            "Mistral Small 3.1 24B (Cloudflare)",
+            "Mistral Small 3.1 24B (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 128_000,
                     AiModelParam.MAX_COMPLETION_TOKENS, 8_192,
@@ -27,7 +27,7 @@ public enum AiModel {
     CF_GEMMA_4_26B_A4B_IT(
             "@cf/google/gemma-4-26b-a4b-it",
             AiApiStyle.CF_PATH_SMART,
-            "Google Gemma 4 26B (Cloudflare)",
+            "Google Gemma 4 26B (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 256_000,
                     AiModelParam.MAX_COMPLETION_TOKENS, 16_384,
@@ -43,13 +43,13 @@ public enum AiModel {
     CF_GPT_OSS_120B(
             "@cf/openai/gpt-oss-120b",
             AiApiStyle.CF_RESPONSES,
-            "GPT-OSS 120B (Cloudflare)",
+            "GPT-OSS 120B (CF)",
             Map.of() // Пока что забил на реализацию GPT-OSS
     ),
     CF_KIMI_K2_6(
             "@cf/moonshotai/kimi-k2.6",
             AiApiStyle.CF_PATH_SMART,
-            "Kimi K2.6 (Cloudflare)",
+            "Kimi K2.6 (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 16_384,
                     AiModelParam.MAX_COMPLETION_TOKENS, 16_384,
@@ -64,7 +64,7 @@ public enum AiModel {
     CF_KIMI_K2_5(
             "@cf/moonshotai/kimi-k2.5",
             AiApiStyle.CF_PATH_SMART,
-            "Kimi K2.5 (Cloudflare)",
+            "Kimi K2.5 (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 16_384,
                     AiModelParam.MAX_COMPLETION_TOKENS, 16_384,
@@ -79,7 +79,7 @@ public enum AiModel {
     CF_NEMOTRON_3_120B(
             "@cf/nvidia/nemotron-3-120b-a12b",
             AiApiStyle.CF_PATH_SMART,
-            "Nemotron 3 120B A12B (Cloudflare)",
+            "Nemotron 3 120B A12B (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 256_000,
                     AiModelParam.MAX_COMPLETION_TOKENS, 4_096,
@@ -95,7 +95,7 @@ public enum AiModel {
     CF_GEMMA_3_12B(
             "@cf/google/gemma-3-12b-it",
             AiApiStyle.CF_PATH_SMART,
-            "Gemma 3 (Cloudflare)",
+            "Gemma 3 (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 80_000,
                     AiModelParam.MAX_COMPLETION_TOKENS, 8_192,
@@ -111,7 +111,7 @@ public enum AiModel {
     CF_QWEN_2_5_CODER(
             "@cf/qwen/qwen2.5-coder-32b-instruct",
             AiApiStyle.CF_PATH_SMART,
-            "Qwen 2.5 Coder (Cloudflare)",
+            "Qwen 2.5 Coder (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 4_096,
                     AiModelParam.MAX_COMPLETION_TOKENS, 4_096,
@@ -124,7 +124,7 @@ public enum AiModel {
     CF_QWEN3_30B(
             "@cf/qwen/qwen3-30b-a3b-fp8",
             AiApiStyle.CF_PATH_SMART,
-            "Qwen3 30B A3B FP8 (Cloudflare)",
+            "Qwen3 30B A3B FP8 (CF)",
             Map.of(
                     AiModelParam.MAX_TOKENS, 4_096,
                     AiModelParam.MAX_COMPLETION_TOKENS, 4_096,
@@ -159,6 +159,18 @@ public enum AiModel {
             "GigaChat-2-Max",
             AiApiStyle.GIGACHAT,
             "GigaChat 2 Max",
+            Map.of(
+                    AiModelParam.TEMPERATURE, 0.25,
+                    AiModelParam.TOP_P, 0.85,
+                    AiModelParam.REPETITION_PENALTY, 1.05,
+                    AiModelParam.FREQUENCY_PENALTY, 0.0,
+                    AiModelParam.PRESENCE_PENALTY, 0.15
+            )
+    ),
+    GIGACHAT_3_ULTRA(
+            "GigaChat-3-Ultra",
+            AiApiStyle.GIGACHAT,
+            "GigaChat 3 Ultra",
             Map.of(
                     AiModelParam.TEMPERATURE, 0.25,
                     AiModelParam.TOP_P, 0.85,

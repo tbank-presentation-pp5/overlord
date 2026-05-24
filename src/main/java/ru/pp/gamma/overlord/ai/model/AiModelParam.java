@@ -197,7 +197,7 @@ public enum AiModelParam {
             "reasoning_effort",
             "Ограничение усилий на рассуждение для моделей рассуждения (o1, o3-mini и др.).",
             ParameterType.STRING,
-            null,
+            "medium",
             null, null,
             List.of("low", "medium", "high")
     ),

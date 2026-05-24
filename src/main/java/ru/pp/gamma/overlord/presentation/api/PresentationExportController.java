@@ -110,7 +110,11 @@ public class PresentationExportController {
 
     private static String toLatin(String cyrillic) {
         Transliterator transliterator = Transliterator.getInstance("Russian-Latin/BGN");
-        return transliterator.transliterate(cyrillic).replace(" ", "_")
-                .replace("ʹ", "");
+        return transliterator.transliterate(cyrillic)
+                .replace('–', '-')
+                .replace('—', '-')
+                .replace(" ", "_")
+                .replace("ʹ", "")
+                .replaceAll("[^\\x20-\\x7E]", "_");
     }
 }
