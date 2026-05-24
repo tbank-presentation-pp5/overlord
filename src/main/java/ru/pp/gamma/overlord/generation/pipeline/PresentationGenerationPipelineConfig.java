@@ -9,6 +9,7 @@ import ru.pp.gamma.overlord.ai.api.AiTextClient;
 import ru.pp.gamma.overlord.generation.pipeline.step.GenerateImagesStep;
 import ru.pp.gamma.overlord.generation.pipeline.step.ParseAiResponseStep;
 import ru.pp.gamma.overlord.image.service.ImageService;
+import ru.pp.gamma.overlord.image.service.NsfwPlaceholderService;
 
 @Configuration
 public class PresentationGenerationPipelineConfig {
@@ -29,13 +30,13 @@ public class PresentationGenerationPipelineConfig {
     @Bean
     public GenerateImagesStep generateImagesStep(
             AiImageClient aiImageClient,
-            AiTextClient aiTextClient,
-            ImageService imageService
+            ImageService imageService,
+            NsfwPlaceholderService nsfwPlaceholderService
     ) {
         return new GenerateImagesStep(
                 aiImageClient,
-                aiTextClient,
-                imageService
+                imageService,
+                nsfwPlaceholderService
         );
     }
 
